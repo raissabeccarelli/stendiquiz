@@ -11,7 +11,7 @@
 
 ## 📌 Descrizione
 
-**Stendiquiz** è un progetto sviluppato nell'ambito di un corso universitario di *Programmazione Web*.  
+**Stendiquiz** è un progetto sviluppato nell'ambito di un corso universitario di *Programmazione Web*. 
 
 ---
 
