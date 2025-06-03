@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>STENDIQUIZ</title>
+      <script src = "./script/script.js"></script>
+      <link rel="stylesheet" href="./css/stili_generali.css" type="text/css">
+  </head>
+  <body>
+    <script>
+          if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', handleRedirect);
+          } else {
+              handleRedirect();
+          }
+    </script>
+      <div class="malva-container">
+          <div class="mobile-content">
+              <h1>Dispositivo Mobile</h1>
+              <p>Il tuo schermo è troppo piccolo per la versione desktop.</p>
+              <p style="color: #8B4B9B;">Questa è la versione ottimizzata per mobile.</p>
+              <div id="screen-info" class="screen-info">
+                  Rilevamento dimensioni schermo...
+              </div>
+          </div>
+      </div>
+  </body>
+</html>
