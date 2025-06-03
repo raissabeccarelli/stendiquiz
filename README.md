@@ -31,7 +31,7 @@ Il progetto è stato costruito con gli strumenti e le tecnologie seguenti:
 
 ## ✨ Funzionalità Principali
 
-- Creazione dei quiZ
+- Creazione dei quiz
 - Partecipazione a quiz già creati
 - Visualizzazione statistiche personali
 
