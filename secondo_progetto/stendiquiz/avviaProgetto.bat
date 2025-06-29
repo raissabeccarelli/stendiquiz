@@ -7,7 +7,7 @@ set "TAB=%TAB:~0,1%"
 
 echo Stendiquiz
 echo.
-echo Risoluzione delle dipendenze in corso...
+echo Verifica delle dipendenze in corso...
 REM Verifica installazione di Python
 python --version > nul 2>&1
 if errorlevel 1 (
@@ -37,23 +37,6 @@ if errorlevel 1 (
     )
 ) else (
     echo Trovato Django
-)
-
-REM Verifica presenza del modulo requests
-python -c "import requests" > nul 2>&1
-if errorlevel 1 (
-    echo Il modulo requests non e' installato
-    echo Installazione del modulo request in corso...
-    pip install requests
-    if errorlevel 1 (
-        echo Errore durante l'installazione del modulo requests
-        pause
-        exit /b
-    ) else (
-        echo Il modulo requests e' stato installato correttamente!
-    )
-) else (
-    echo Modulo requests installato
 )
 
 echo.
