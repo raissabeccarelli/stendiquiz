@@ -17,9 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from . import index
+from . import controller
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index.index, name='index'),
+    path('', controller.index, name='index'),
 ]
