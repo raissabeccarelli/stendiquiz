@@ -6,6 +6,12 @@ from . import utilities
 
 indexTemplateName = "index.html"
 
+OPEN_QUIZ = "reindirizzaQUIZ(this)"
+OPEN_UTENTE = "reindirizzaUTENTE(this)"
+OPEN_PARTECIPAZIONE = "reindirizzaPARTECIPAZIONI(this)"
+OPEN_INFO_QUIZ = "reindirizzaINFO_QUIZ(this)"
+OPEN_CREA_QUIZ = "openCreaQuiz(this)"
+
 def estrazioneQueryString(request):
     parametri = request.GET
     parametri = {k: v[0] if len(v) == 1 else v for k, v in parametri.lists()}

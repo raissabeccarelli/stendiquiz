@@ -1,0 +1,3 @@
+function caricaQuiz(data) {
+
+}

@@ -18,7 +18,6 @@ function evidenziaVoceSidebar() {
     $('#sidebar ul li').each(function () {
         const isActive = $(this).attr('active-page');
         if (isActive) {
-            alert(isActive);
             $(this).addClass('active');
         }
     });

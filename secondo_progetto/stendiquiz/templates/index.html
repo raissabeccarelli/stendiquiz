@@ -5,12 +5,7 @@
 	<title>STENDIQUIZ</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	{% load static %}
-	<link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-	<link rel="stylesheet" href="../static/fontawesome/css/all.min.css">
-	<link rel="stylesheet" href="../static/bootstrap/style.css">
-	<link rel="stylesheet" href="../static/css/sidebar.css">
-	<link rel="stylesheet" href="../static/css/stili_generali.css">
+	{% include "commons/import_comuni.html" %}
 </head>
 
 <body onLoad="includiFile();">
@@ -25,27 +20,12 @@
 		<nav id="sidebar" data-include="sidebar"></nav>
 		<!-- Page Content  -->
 		<div id="content" class="p-4 p-md-5 pt-5">
-			<h2 class="mb-4">Sidebar #03</h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-				dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-				ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-				fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-				deserunt mollit anim id est laborum.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-				dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-				ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-				fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-				deserunt mollit anim id est laborum.</p>
+
 		</div>
 	</div>
 
 	<!--Footer-->
-	<footer class="bg-dark text-center py-4" data-include="footer"></footer>
-
-	<script src="../static/jquery/jquery.min.js"></script>
-	<script src="../static/bootstrap/bootstrap.min.js"></script>
-	<script src="../static/js/sidebar.js"></script>
-	<script src="../static/js/utilities.js"></script>
+	{% include "commons/footer.html" %}
 </body>
 
 </html>
