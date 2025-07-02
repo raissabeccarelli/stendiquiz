@@ -39,6 +39,22 @@ if errorlevel 1 (
     echo Trovato Django
 )
 
+REM Verifica se requests e' installato
+python -c "import requests" > nul 2>&1
+if errorlevel 1 (
+    echo Installazione del modulo Requests in corso...
+    pip install requests
+    if errorlevel 1 (
+        echo Errore durante l'installazione del modulo requests
+        pause
+        exit /b
+    ) else (
+        echo Requests e' stato installato correttamente!
+    )
+) else (
+    echo Trovato Requests
+)
+
 echo.
 echo Avvio del server in corso...
 python manage.py runserver

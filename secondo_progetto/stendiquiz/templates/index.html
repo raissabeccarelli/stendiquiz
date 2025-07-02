@@ -5,13 +5,21 @@
 	<title>STENDIQUIZ</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+	{% load static %}
+	<link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
 	<link rel="stylesheet" href="../static/fontawesome/css/all.min.css">
 	<link rel="stylesheet" href="../static/bootstrap/style.css">
 	<link rel="stylesheet" href="../static/css/sidebar.css">
+	<link rel="stylesheet" href="../static/css/stili_generali.css">
 </head>
 
-<body onLoad="includiFile(); evidenziaVoceSidebar();">
+<body onLoad="includiFile();">
+	<div id="alertLogout" class="alert alert-info alert-dismissible fade show top-page d-none" role="alert">
+		Funzionalità non disponibile, sei autenticato come utente demo.
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
 	<div class="wrapper d-flex align-items-stretch">
 		<!--Sidebar-->
 		<nav id="sidebar" data-include="sidebar"></nav>
@@ -30,6 +38,7 @@
 				deserunt mollit anim id est laborum.</p>
 		</div>
 	</div>
+
 	<!--Footer-->
 	<footer class="bg-dark text-center py-4" data-include="footer"></footer>
 

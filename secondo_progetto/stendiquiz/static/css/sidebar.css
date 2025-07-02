@@ -12,6 +12,7 @@
 #sidebar h2 {
   margin-bottom: 20px;
   font-weight: 700;
+  text-align: center;
 }
 
 #sidebar h2 .logo {
@@ -34,14 +35,31 @@
   font-size: 14px;
 }
 
-#sidebar ul li a {
+#sidebar ul li a,
+#sidebar h3 {
+  padding: 10px 0;
+  display: block;
+}
+
+#sidebar ul li a,
+.logout {
   padding: 10px 0;
   display: block;
   color: rgba(255, 255, 255, 0.6);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-#sidebar ul li a:hover {
+.logout {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#sidebar ul li a:hover,
+#sidebar h3,
+.logout:hover {
   color: #fff;
 }
 
@@ -63,4 +81,26 @@
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
+}
+
+.bg-wrap .user-logo .img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
+.bg-wrap .user-logo h3 {
+  color: #fff;
+  font-size: 18px;
+}
+
+.img {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  page-break-inside: avoid;
+  vertical-align: middle;
+  border-style: none;
 }
