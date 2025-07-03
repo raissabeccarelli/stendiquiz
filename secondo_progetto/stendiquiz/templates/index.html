@@ -22,13 +22,12 @@
 		<nav id="sidebar" data-include="sidebar"></nav>
 		<!-- Page Content  -->
 		<div id="content" class="p-4 p-md-5 pt-5 d-flex flex-row justify-content-center align-items-center">
-			{% if risultati.numeroRighe > 0 %}
 			<div class="container-fluid">
-				<table id="tabellaQuiz">
+				<table id="tabellaQuiz" class="table table-hover table-striped">
 					<thead>
 						<tr>
 							{% for cella in risultati.listaIntestazioni %}
-							<th>
+							<th {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}' {% endfor %}>
 								{{cella.valore}}
 							</th>
 							{% endfor %}
@@ -38,7 +37,7 @@
 						{%for riga in risultati.risultato %}
 						<tr>
 							{% for cella in riga %}
-							<td>
+							<td {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}' {% endfor %}>
 								{{cella.valore}}
 							</td>
 							{% endfor %}
@@ -47,7 +46,6 @@
 					</tbody>
 				</table>
 			</div>
-			{% endif %}
 		</div>
 		<!--Filtro Ricerca-->
 	</div>

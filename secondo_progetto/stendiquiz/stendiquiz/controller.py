@@ -42,6 +42,7 @@ def index(request):
         titolo = riga["titolo"]
         dataInizio = utilities.DataFormatoView(riga["dataInizio"])
         dataFine = utilities.DataFormatoView(riga["dataFine"])
+        annoInizio = riga["annoInizio"]
         isAttivo = riga["isAttivo"]
 
         record.append({"valore": titolo})
@@ -49,14 +50,15 @@ def index(request):
         record.append({"valore": dataFine})
 
         if isAttivo=='1':
-            record.append({"valore": mark_safe("<input type='button' value= 'Gioca' />")})
+            record.append({"valore": mark_safe("<button class='btn btn-primary' type='submit'>Gioca</button>"), "impostazioni":{"class":"text-center align-middle"}})
         else:
-            record.append({"valore": mark_safe("<input type='button' value= 'N/D' disabled />")})
+            record.append({"valore": mark_safe("<button class='btn btn-secondary' type='button' disabled>N/D</button>"), "impostazioni":{"class":"text-center align-middle"}})
 
+        record.append({"valore": annoInizio})
         risultato.append(record)
 
     numeroRighe = len(risultato)
-    listaIntestazioni = [{"valore":"Titolo"}, {"valore":"Data Inizio"} , {"valore":"Data Fine"} , {"valore":""}]
+    listaIntestazioni = [{"valore":"Titolo"}, {"valore":"Data Inizio"} , {"valore":"Data Fine"} , {"valore":""}, {"valore":"Anno Inizio"}]
     context["risultati"] = {"numeroRighe": numeroRighe , "risultato": risultato, "listaIntestazioni": listaIntestazioni}
     context["filtro"] = parametri
 

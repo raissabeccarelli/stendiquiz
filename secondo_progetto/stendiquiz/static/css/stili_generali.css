@@ -1,3 +1,35 @@
 .top-page {
     margin-bottom: 0px;
 }
+
+table thead,
+.btn.btn-secondary {
+    background-color: #8B5FBF;
+    border-color: #8B5FBF;
+    color: #fff;
+}
+
+.btn.btn-primary {
+    background-color: #993366;
+    border-color: #993366;
+}
+
+.btn.btn.btn-secondary {
+    min-width: 65px;
+}
+
+.btn:disabled {
+    cursor: not-allowed
+}
+
+.page-item.active .page-link {
+    background-color: #8B5FBF;
+    border-color: #8B5FBF;
+    color: #fff;
+    outline-color: #8B5FBF;
+}
+
+.page-link:hover,
+.page-link {
+    color: #8B5FBF;
+}
