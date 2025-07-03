@@ -6,9 +6,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	{% include "commons/import_comuni.html" %}
+	{% load static %}
+	<script src="{% static 'js/index.js' %}"></script>
 </head>
 
-<body onLoad="includiFile();">
+<body onLoad="includiFile(); caricaQuiz();">
 	<div id="alertLogout" class="alert alert-info alert-dismissible fade show top-page d-none" role="alert">
 		Funzionalità non disponibile, sei autenticato come utente demo.
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -19,9 +21,35 @@
 		<!--Sidebar-->
 		<nav id="sidebar" data-include="sidebar"></nav>
 		<!-- Page Content  -->
-		<div id="content" class="p-4 p-md-5 pt-5">
-
+		<div id="content" class="p-4 p-md-5 pt-5 d-flex flex-row justify-content-center align-items-center">
+			{% if risultati.numeroRighe > 0 %}
+			<div class="container-fluid">
+				<table id="tabellaQuiz">
+					<thead>
+						<tr>
+							{% for cella in risultati.listaIntestazioni %}
+							<th>
+								{{cella.valore}}
+							</th>
+							{% endfor %}
+						</tr>
+					</thead>
+					<tbody>
+						{%for riga in risultati.risultato %}
+						<tr>
+							{% for cella in riga %}
+							<td>
+								{{cella.valore}}
+							</td>
+							{% endfor %}
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% endif %}
 		</div>
+		<!--Filtro Ricerca-->
 	</div>
 
 	<!--Footer-->

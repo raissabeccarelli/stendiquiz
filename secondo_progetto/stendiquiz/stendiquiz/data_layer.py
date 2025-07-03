@@ -30,15 +30,14 @@ TIPOLOGIA_RICERCA = {"minore": "1",
 
 
 def eseguiQuery(query):
-    isSelect= 0
+    isSelect = 0
     if "SELECT" in query:
         isSelect = 1
 
     richiesta = {"query" : query , "isSelect": isSelect}
-
+    
     url = 'https://stendiquiz.altervista.org/api.php'
-    response = requests.get(url , params= richiesta)
-
+    response = requests.get(url , params = richiesta)
     if response.status_code == 200:
         try:
             data = response.json()
@@ -97,7 +96,7 @@ def aggiungiCondizione(condizione, nome , valore , tipologia):
     return condizione
 
 def getQuiz(parametri):
-    QUERY_QUIZ = "SELECT * FROM Quiz"
+    QUERY_QUIZ = "SELECT Quiz.CODICE AS codice, Quiz.TITOLO as titolo, Quiz.DATAINIZIO as dataInizio, Quiz.DATAFINE as dataFine, YEAR(Quiz.DATAINIZIO) as annoInizio, (Quiz.DATAINIZIO <= NOW() AND Quiz.DATAFINE >= NOW()) as isAttivo FROM Quiz"
     ORDER_BY = " ORDER BY Quiz.TITOLO"
 
     if "dataInizio" in parametri:
@@ -147,10 +146,8 @@ def getQuiz(parametri):
         tipologia = TIPOLOGIA_RICERCA["minoreUguale"]
         condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere, nome = "Quiz.DATAFINE", valore="NOW()", tipologia=tipologia)
 
-    query = QUERY_QUIZ  + condizioniWhere + GROUP_BY + condizioniHaving + ORDER_BY
-
+    query = QUERY_QUIZ  + condizioniWhere + ORDER_BY
     risultati = eseguiQuery(query)
-
     return risultati
 
 
