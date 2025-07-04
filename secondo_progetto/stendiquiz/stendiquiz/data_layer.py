@@ -96,7 +96,8 @@ def aggiungiCondizione(condizione, nome , valore , tipologia):
     return condizione
 
 def getQuiz(parametri):
-    QUERY_QUIZ = "SELECT Quiz.CODICE AS codice, Quiz.TITOLO as titolo, Quiz.DATAINIZIO as dataInizio, Quiz.DATAFINE as dataFine, YEAR(Quiz.DATAINIZIO) as annoInizio, (Quiz.DATAINIZIO <= NOW() AND Quiz.DATAFINE >= NOW()) as isAttivo FROM Quiz"
+    QUERY_QUIZ = "SELECT Quiz.CODICE AS codice, Quiz.TITOLO as titolo, Quiz.DATAINIZIO as dataInizio, Quiz.DATAFINE as dataFine, Quiz.CREATORE AS creatore,  YEAR(Quiz.DATAINIZIO) as annoInizio, (Quiz.DATAINIZIO <= NOW() AND Quiz.DATAFINE >= NOW()) as isAttivo, Quiz.DATAINIZIO >= NOW() as isFuturo, Quiz.DATAFINE <= NOW() as isScaduto, COUNT(DISTINCT Domande.NUMERO) AS nDomande FROM Quiz LEFT JOIN Domande ON Quiz.CODICE = Domande.QUIZCODICE "
+    GROUP_BY = " GROUP BY Quiz.CODICE, Quiz.TITOLO, Quiz.DATAINIZIO, Quiz.DATAFINE, Quiz.CREATORE, annoInizio, isAttivo, isFuturo, isScaduto"
     ORDER_BY = " ORDER BY Quiz.TITOLO"
 
     if "dataInizio" in parametri:
@@ -106,7 +107,6 @@ def getQuiz(parametri):
         parametri["dataFine"] = utilities.DataFormatoDataBase(parametri["dataFine"])    
         
     condizioniWhere = ""
-    condizioniHaving = ""
 
     if "codice" in parametri:
         condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.CODICE", valore=parametri["codice"] , tipologia=TIPOLOGIA_RICERCA["noLike"])
@@ -117,14 +117,14 @@ def getQuiz(parametri):
             tipologia = TIPOLOGIA_RICERCA["noLike"]
 
         condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.TITOLO", valore=parametri["titolo"] , tipologia=tipologia)
-    '''
+
     if "creatore" in parametri:
         tipologia = TIPOLOGIA_RICERCA["like"]
         if "vincoloCreatore" in parametri:
             tipologia = TIPOLOGIA_RICERCA["noLike"]
 
         condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.CREATORE", valore=parametri["creatore"] , tipologia=tipologia)
-
+        
     if "dataInizio" in parametri:
         if "radio_quale_dataInizio" in parametri:
             tipologia = parametri["radio_quale_dataInizio"]
@@ -134,7 +134,6 @@ def getQuiz(parametri):
         if "radio_quale_dataFine" in parametri:
             tipologia = parametri["radio_quale_dataFine"]
             condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.DATAFINE", valore=parametri["dataFine"] , tipologia=tipologia)
-    '''
 
     if "annoInizio" in parametri:
         tipologia = TIPOLOGIA_RICERCA["uguale"]
@@ -146,7 +145,7 @@ def getQuiz(parametri):
         tipologia = TIPOLOGIA_RICERCA["minoreUguale"]
         condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere, nome = "Quiz.DATAFINE", valore="NOW()", tipologia=tipologia)
 
-    query = QUERY_QUIZ  + condizioniWhere + ORDER_BY
+    query = QUERY_QUIZ  + condizioniWhere + GROUP_BY + ORDER_BY
     risultati = eseguiQuery(query)
     return risultati
 

@@ -11,8 +11,10 @@
 </head>
 
 <body onLoad="includiFile(); caricaQuiz();">
+	<!--Message Box-->
+	{% include "commons/message_box.html" %}
 	<div id="alertLogout" class="alert alert-info alert-dismissible fade show top-page d-none" role="alert">
-		Funzionalità non disponibile, sei autenticato come utente demo.
+		Funzionalità non disponibile, sei autenticato come superuser.
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		</button>
@@ -47,9 +49,7 @@
 				</table>
 			</div>
 		</div>
-		<!--Filtro Ricerca-->
 	</div>
-
 	<!--Footer-->
 	{% include "commons/footer.html" %}
 </body>

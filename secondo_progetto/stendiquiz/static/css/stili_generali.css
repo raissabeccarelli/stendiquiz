@@ -33,3 +33,7 @@ table thead,
 .page-link {
     color: #8B5FBF;
 }
+
+.badge.badge-pill {
+    min-width: 78px;
+}
