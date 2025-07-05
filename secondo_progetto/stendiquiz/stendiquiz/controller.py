@@ -6,7 +6,10 @@ from django.utils.safestring import mark_safe
 from . import utilities
 from . import data_layer as server
 
+import random
+
 indexTemplateName = "index.html"
+giocaTemplateName = "gioca.html"
 
 OPEN_QUIZ = "reindirizzaQUIZ(this)"
 OPEN_UTENTE = "reindirizzaUTENTE(this)"
@@ -27,13 +30,11 @@ def index(request):
     Controllore pagina index
     '''
     res = HttpResponse(content_type="text/html")
-
-    parametri = estrazioneQueryString(request)
     
     context = {}
     context["infoPagina"] = {"nomePagina":"index"}
     
-    rispostaServer = server.getQuiz(parametri.copy())
+    rispostaServer = server.getQuiz()
     risultato = []
 
     for riga in rispostaServer:
@@ -64,15 +65,69 @@ def index(request):
             record.append({"valore": mark_safe("<span class='badge badge-pill badge-danger'>Terminato</span>"), "impostazioni":{"class":"text-center align-middle"}})
 
         record.append({"valore": annoInizio})
-        print(record)
         risultato.append(record)
 
     numeroRighe = len(risultato)
     listaIntestazioni = [{"valore":"Codice"}, {"valore":"Titolo"}, {"valore": "Creatore"}, {"valore": "# Domande"}, {"valore":"Data Apertura"} , {"valore":"Data Chiusura"}, {"valore":""}, {"valore":"Anno Inizio"}]
     context["risultati"] = {"numeroRighe": numeroRighe , "risultato": risultato, "listaIntestazioni": listaIntestazioni}
-    context["filtro"] = parametri
+    context["infoPagina"] = {"page" : "Home" , "root" : "Stendiquiz"}
 
     template = loader.get_template(indexTemplateName)   
     page = template.render(context= context , request= request)
     res.write(page)
     return res
+
+
+def gioca(request) :
+    res = HttpResponse(content_type="text/html")
+    parametri = estrazioneQueryString(request)
+    
+    context = {}
+    quiz = server.getQuiz(parametri["quizCodice"])
+    domandeDB = server.getDomandeQuiz(parametri["quizCodice"])
+    random.shuffle(domandeDB)
+    
+    domande = []
+    
+    for domanda in domandeDB:
+        risposteDB = server.getRisposteDomandaQuiz(codiceQuiz=parametri["quizCodice"] , numeroDomanda = domanda["numero"])
+        random.shuffle(risposteDB)
+        risposte = []
+        domandaPunteggio = 2
+
+        for risposta in risposteDB:
+            o_r = {}
+            o_r["testo"] = risposta["testo"]
+            o_r["corretta"] = risposta["tipo"] == "Corretta" 
+            o_r["numero"] = risposta["numero"]
+
+            if not risposta["punteggio"] == None:
+                domandaPunteggio = risposta["punteggio"]
+
+            risposte.append(o_r)
+        
+        o_d = {}
+        o_d["testo"] = domanda["testo"]
+        o_d["numero"] = domanda["numero"]
+        o_d["punteggio"] = domandaPunteggio
+        o_d["risposte"] = risposte
+
+        domande.append(o_d)
+        
+        infoQuiz = {"idQuiz" : quiz["codice"],
+                "autore" : quiz["creatore"],
+                "dataInizio" : utilities.DataFormatoView(quiz["dataInizio"]),
+                "dataFine" : utilities.DataFormatoView(quiz["dataFine"]),
+                "titolo" : quiz["titolo"],
+                "domande" : domande
+                }    
+    context = infoQuiz
+    context["infoPagina"] = {"nomePagina" : "gioca"}
+
+    template = loader.get_template(giocaTemplateName)
+    page = template.render(context= context , request= request)
+
+    res.write(page)
+
+    return res
+    

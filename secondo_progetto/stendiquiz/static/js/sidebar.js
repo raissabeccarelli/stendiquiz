@@ -14,15 +14,6 @@
     fullHeight();
 }); (jQuery);
 
-function evidenziaVoceSidebar() {
-    $('#sidebar ul li').each(function () {
-        const isActive = $(this).attr('active-page');
-        if (isActive) {
-            $(this).addClass('active');
-        }
-    });
-}
-
 function mostraAlertLogout() {
     $("#alertLogout").removeClass('d-none');
     setTimeout(function () {

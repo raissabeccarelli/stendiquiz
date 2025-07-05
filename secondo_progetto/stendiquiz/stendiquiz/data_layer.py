@@ -95,112 +95,35 @@ def aggiungiCondizione(condizione, nome , valore , tipologia):
     
     return condizione
 
-def getQuiz(parametri):
+def getQuiz(codice = None):
     QUERY_QUIZ = "SELECT Quiz.CODICE AS codice, Quiz.TITOLO as titolo, Quiz.DATAINIZIO as dataInizio, Quiz.DATAFINE as dataFine, Quiz.CREATORE AS creatore,  YEAR(Quiz.DATAINIZIO) as annoInizio, (Quiz.DATAINIZIO <= NOW() AND Quiz.DATAFINE >= NOW()) as isAttivo, Quiz.DATAINIZIO >= NOW() as isFuturo, Quiz.DATAFINE <= NOW() as isScaduto, COUNT(DISTINCT Domande.NUMERO) AS nDomande FROM Quiz LEFT JOIN Domande ON Quiz.CODICE = Domande.QUIZCODICE "
     GROUP_BY = " GROUP BY Quiz.CODICE, Quiz.TITOLO, Quiz.DATAINIZIO, Quiz.DATAFINE, Quiz.CREATORE, annoInizio, isAttivo, isFuturo, isScaduto"
     ORDER_BY = " ORDER BY Quiz.TITOLO"
-
-    if "dataInizio" in parametri:
-        parametri["dataInizio"] = utilities.DataFormatoDataBase(parametri["dataInizio"])    
     
-    if "dataFine" in parametri:
-        parametri["dataFine"] = utilities.DataFormatoDataBase(parametri["dataFine"])    
-        
     condizioniWhere = ""
-
-    if "codice" in parametri:
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.CODICE", valore=parametri["codice"] , tipologia=TIPOLOGIA_RICERCA["noLike"])
     
-    if "titolo" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["like"]
-        if "vincoloTitolo" in parametri:
-            tipologia = TIPOLOGIA_RICERCA["noLike"]
-
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.TITOLO", valore=parametri["titolo"] , tipologia=tipologia)
-
-    if "creatore" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["like"]
-        if "vincoloCreatore" in parametri:
-            tipologia = TIPOLOGIA_RICERCA["noLike"]
-
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.CREATORE", valore=parametri["creatore"] , tipologia=tipologia)
+    if codice is not None:
+        condizioniWhere = aggiungiCondizioneWhere(condizioniWhere, "Quiz.CODICE", codice, TIPOLOGIA_RICERCA["uguale"])
         
-    if "dataInizio" in parametri:
-        if "radio_quale_dataInizio" in parametri:
-            tipologia = parametri["radio_quale_dataInizio"]
-            condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.DATANIZIO", valore=parametri["dataInizio"] , tipologia=tipologia)
-    
-    if "dataFine" in parametri:
-        if "radio_quale_dataFine" in parametri:
-            tipologia = parametri["radio_quale_dataFine"]
-            condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "Quiz.DATAFINE", valore=parametri["dataFine"] , tipologia=tipologia)
-
-    if "annoInizio" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["uguale"]
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere, nome = "YEAR(Quiz.DATAINIZIO)", valore=parametri["annoInizio"], tipologia=tipologia)
-
-    if "quizAttivo" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["maggioreUguale"]
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere, nome = "Quiz.DATAINIZIO", valore="NOW()", tipologia=tipologia)
-        tipologia = TIPOLOGIA_RICERCA["minoreUguale"]
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere, nome = "Quiz.DATAFINE", valore="NOW()", tipologia=tipologia)
-
-    query = QUERY_QUIZ  + condizioniWhere + GROUP_BY + ORDER_BY
+    query = QUERY_QUIZ  + condizioniWhere + GROUP_BY +ORDER_BY
     risultati = eseguiQuery(query)
+    
     return risultati
 
-
-def getUtente(parametri):
-    
-    QUERY = "SELECT Utenti.NOMEUTENTE AS nomeUtente , Utenti.NOME AS nome , Utenti.COGNOME AS cognome , Utenti.EMAIL AS email , COUNT(DISTINCT Partecipazioni.QUIZCODICE) as nQgiocati FROM Utenti LEFT JOIN Quiz ON Utenti.nomeUtente = Quiz.CREATORE LEFT JOIN Partecipazioni ON Utente.nomeUtente = Partecipazioni.nomeUtente"
-
-    GROUP_BY = " GROUP BY UTENTE.NOME_UTENTE "
-
-    ORDER_BY = " ORDER BY UTENTE.NOME_UTENTE ASC"
-
-    condizioniWhere = ""
-    condizioniHaving = ""
-
-    ''''
-    # ? NOME UTENTE
-    if "nomeUtente" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["like"]
-        if "vincoloNomeUtente" in parametri:
-            tipologia = TIPOLOGIA_RICERCA["noLike"]
-
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "UTENTE.NOME_UTENTE", valore=parametri["nomeUtente"] , tipologia=tipologia)
-    
-    # ? NOME
-    if "nome" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["like"]
-        if "vincoloNome" in parametri:
-            tipologia = TIPOLOGIA_RICERCA["noLike"]
-
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "UTENTE.NOME", valore=parametri["nome"] , tipologia=tipologia)
-    
-    # ? COGNOME
-    if "cognome" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["like"]
-        if "vincoloCognome" in parametri:
-            tipologia = TIPOLOGIA_RICERCA["noLike"]
-
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "UTENTE.COGNOME", valore=parametri["cognome"] , tipologia=tipologia)
-
-    # ? EMAIL
-    if "email" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["like"]
-        if "vincoloEmail" in parametri:
-            tipologia = TIPOLOGIA_RICERCA["noLike"]
-
-        condizioniWhere = aggiungiCondizioneWhere(condizione = condizioniWhere , nome= "UTENTE.EMAIL", valore=parametri["email"] , tipologia=tipologia)
-    '''
-    # ? NUMERO QUIZ GIOCATI
-    if "nQgiocati" in parametri:
-        tipologia = TIPOLOGIA_RICERCA["uguale"]
-        condizioniHaving = aggiungiCondizioneHaving(condizione = condizioniWhere , nome= "nQgiocati", valore=parametri["nQgiocati"] , tipologia=tipologia)
-
-    query = QUERY  + condizioniWhere + GROUP_BY + condizioniHaving + ORDER_BY
-    
+def getDomandeQuiz(codice):
+    query = "SELECT NUMERO as numero, TESTO as testo FROM Domande WHERE QUIZCODICE = {} ORDER BY NUMERO".format(codice)
     risultati = eseguiQuery(query)
-
+    
     return risultati
+
+def getRisposteDomandaQuiz(codiceQuiz , numeroDomanda):
+    query = "SELECT NUMERO AS numero ,TESTO AS testo, TIPORISPOSTA AS tipo , PUNTEGGIO AS punteggio FROM Risposte WHERE QUIZCODICE = {} AND DOMANDA = {} ORDER BY NUMERO ASC".format(codiceQuiz , numeroDomanda)
+    risultati = eseguiQuery(query)
+    
+    return risultati
+
+def esisteQuiz(id_quiz):
+    query = "SELECT * FROM Quiz WHERE CODICE = {}".format(id_quiz)
+    ris = eseguiQuery(query)
+    
+    return len(ris) > 0

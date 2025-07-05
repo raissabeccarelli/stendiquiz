@@ -37,3 +37,16 @@ table thead,
 .badge.badge-pill {
     min-width: 78px;
 }
+
+.custom-breadcrumb {
+    background-color: #ececec;
+}
+
+.breadcrumb a {
+    color: #212529 !important;
+    text-decoration: none;
+}
+
+#tabellaQuiz td {
+    cursor: pointer;
+}

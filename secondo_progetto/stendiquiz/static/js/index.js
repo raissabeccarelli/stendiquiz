@@ -85,7 +85,7 @@ function caricaQuiz(data) {
         var dataInizio = table.row(this).data()[4];
         var dataFine = table.row(this).data()[5];
         if (table.row(this).data().at(-2).includes('Aperto')) {
-            window.location.href = "/gioca?codiceQuiz=" + codiceQuiz;
+            window.location.href = "http://127.0.0.1/gioca?quizCodice=" + codiceQuiz;
         } else if (table.row(this).data().at(-2).includes('In apertura')) {
             $("#messageBoxTitle").text("Quiz in apertura");
             $("#messageBoxMessage").html("Il quiz \"" + nomeQuiz + "\" aprirà il " + dataInizio + ".<br/> Riprovare in seguito.");
