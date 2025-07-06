@@ -1,6 +1,8 @@
 <nav class="col-3 p-0" aria-label="breadcrumb">
     <ol class="breadcrumb custom-breadcrumb">
-        <li class="breadcrumb-item"><a href="#">{{infoPagina.root}}</a></li>
-        <li class="breadcrumb-item" aria-current="page">{{infoPagina.page}}</li>
+        {%for pagina in infoPagina.root%}
+             <li class="breadcrumb-item"><a href="#">{{pagina}}</a></li>
+        {%endfor%}
+        <li class="breadcrumb-item active" earia-current="page">{{infoPagina.page}}</li>
     </ol>
 </nav>

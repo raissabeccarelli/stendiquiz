@@ -9,6 +9,7 @@ from . import data_layer as server
 import random
 
 indexTemplateName = "index.html"
+imieiquizTemplateName = "imieiquiz.html"
 giocaTemplateName = "gioca.html"
 
 OPEN_QUIZ = "reindirizzaQUIZ(this)"
@@ -17,12 +18,15 @@ OPEN_PARTECIPAZIONE = "reindirizzaPARTECIPAZIONI(this)"
 OPEN_INFO_QUIZ = "reindirizzaINFO_QUIZ(this)"
 OPEN_CREA_QUIZ = "openCreaQuiz(this)"
 
+SUPER_USER = "demo"
+
+
 def estrazioneQueryString(request):
     parametri = request.GET
     parametri = {k: v[0] if len(v) == 1 else v for k, v in parametri.lists()}
     return parametri
 
-#Creare una funzione per ogni pagina da visualizzare 
+# Creare una funzione per ogni pagina da visualizzare
 
 
 def index(request):
@@ -30,11 +34,11 @@ def index(request):
     Controllore pagina index
     '''
     res = HttpResponse(content_type="text/html")
-    
+
     context = {}
-    context["infoPagina"] = {"nomePagina":"index"}
-    
-    rispostaServer = server.getQuiz()
+    context["infoPagina"] = {"page": "Home", "root": ["Stendiquiz"]}
+
+    rispostaServer = server.getQuiz(parametri={})
     risultato = []
 
     for riga in rispostaServer:
@@ -49,7 +53,7 @@ def index(request):
         isScaduto = riga["isScaduto"]
         creatore = riga["creatore"]
         numDomande = riga["nDomande"]
-        
+
         record.append({"valore": codice})
         record.append({"valore": titolo})
         record.append({"valore": creatore})
@@ -57,40 +61,47 @@ def index(request):
         record.append({"valore": dataInizio})
         record.append({"valore": dataFine})
 
-        if isAttivo=='1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-success'>Aperto</span>"), "impostazioni":{"class":"text-center align-middle"}})
-        elif isFuturo=='1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-info'>In apertura</span>"), "impostazioni":{"class":"text-center align-middle"}})
-        elif isScaduto=='1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-danger'>Terminato</span>"), "impostazioni":{"class":"text-center align-middle"}})
+        if isAttivo == '1':
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-success'>Aperto</span>"),
+                          "impostazioni": {"class": "text-center align-middle"}})
+        elif isFuturo == '1':
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-info'>In apertura</span>"),
+                          "impostazioni": {"class": "text-center align-middle"}})
+        elif isScaduto == '1':
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-danger'>Terminato</span>"),
+                          "impostazioni": {"class": "text-center align-middle"}})
 
         record.append({"valore": annoInizio})
         risultato.append(record)
 
-    numeroRighe = len(risultato)
-    listaIntestazioni = [{"valore":"Codice"}, {"valore":"Titolo"}, {"valore": "Creatore"}, {"valore": "# Domande"}, {"valore":"Data Apertura"} , {"valore":"Data Chiusura"}, {"valore":""}, {"valore":"Anno Inizio"}]
-    context["risultati"] = {"numeroRighe": numeroRighe , "risultato": risultato, "listaIntestazioni": listaIntestazioni}
-    context["infoPagina"] = {"page" : "Home" , "root" : "Stendiquiz"}
+    listaIntestazioni = [{"valore": "Codice"}, {"valore": "Titolo"}, {"valore": "Creatore"}, {"valore": "# Domande"}, {
+        "valore": "Data Apertura"}, {"valore": "Data Chiusura"}, {"valore": ""}, {"valore": "Anno Inizio"}]
+    context["risultati"] = {"risultato": risultato,
+                            "listaIntestazioni": listaIntestazioni}
 
-    template = loader.get_template(indexTemplateName)   
-    page = template.render(context= context , request= request)
+    template = loader.get_template(indexTemplateName)
+    page = template.render(context=context, request=request)
     res.write(page)
     return res
 
 
-def gioca(request) :
+def gioca(request):
+    '''
+    Controllore pagina gioca
+    '''
     res = HttpResponse(content_type="text/html")
     parametri = estrazioneQueryString(request)
-    
+
     context = {}
     quiz = server.getQuiz(parametri["quizCodice"])
     domandeDB = server.getDomandeQuiz(parametri["quizCodice"])
     random.shuffle(domandeDB)
-    
+
     domande = []
-    
+
     for domanda in domandeDB:
-        risposteDB = server.getRisposteDomandaQuiz(codiceQuiz=parametri["quizCodice"] , numeroDomanda = domanda["numero"])
+        risposteDB = server.getRisposteDomandaQuiz(
+            codiceQuiz=parametri["quizCodice"], numeroDomanda=domanda["numero"])
         random.shuffle(risposteDB)
         risposte = []
         domandaPunteggio = 2
@@ -98,14 +109,14 @@ def gioca(request) :
         for risposta in risposteDB:
             o_r = {}
             o_r["testo"] = risposta["testo"]
-            o_r["corretta"] = risposta["tipo"] == "Corretta" 
+            o_r["corretta"] = risposta["tipo"] == "Corretta"
             o_r["numero"] = risposta["numero"]
 
             if not risposta["punteggio"] == None:
                 domandaPunteggio = risposta["punteggio"]
 
             risposte.append(o_r)
-        
+
         o_d = {}
         o_d["testo"] = domanda["testo"]
         o_d["numero"] = domanda["numero"]
@@ -113,21 +124,105 @@ def gioca(request) :
         o_d["risposte"] = risposte
 
         domande.append(o_d)
-        
-        infoQuiz = {"idQuiz" : quiz["codice"],
-                "autore" : quiz["creatore"],
-                "dataInizio" : utilities.DataFormatoView(quiz["dataInizio"]),
-                "dataFine" : utilities.DataFormatoView(quiz["dataFine"]),
-                "titolo" : quiz["titolo"],
-                "domande" : domande
-                }    
+
+        infoQuiz = {"idQuiz": quiz["codice"],
+                    "autore": quiz["creatore"],
+                    "dataInizio": utilities.DataFormatoView(quiz["dataInizio"]),
+                    "dataFine": utilities.DataFormatoView(quiz["dataFine"]),
+                    "titolo": quiz["titolo"],
+                    "domande": domande
+                    }
     context = infoQuiz
-    context["infoPagina"] = {"nomePagina" : "gioca"}
+    context["infoPagina"] = {"nomePagina": "gioca"}
 
     template = loader.get_template(giocaTemplateName)
-    page = template.render(context= context , request= request)
+    page = template.render(context=context, request=request)
 
     res.write(page)
 
     return res
-    
+
+
+def error_page(request, title, message):
+    context = {}
+    context["title"] = title
+    context["message"] = message
+    return render(request, 'errore.html', context)
+
+
+def imieiquiz(request):
+    '''
+    Controllore pagina I miei quiz
+    '''
+    res = HttpResponse(content_type="text/html")
+
+    context = {}
+    context["infoPagina"] = {"page": "I miei quiz", "root": ["Stendiquiz"]}
+
+    rispostaServer = server.getQuiz(parametri={"creatore": SUPER_USER})
+    risultato = []
+
+    for riga in rispostaServer:
+        record = []
+        codice = riga["codice"]
+        titolo = riga["titolo"]
+        dataInizio = utilities.DataFormatoView(riga["dataInizio"])
+        dataFine = utilities.DataFormatoView(riga["dataFine"])
+        annoInizio = riga["annoInizio"]
+        isAttivo = riga["isAttivo"]
+        isFuturo = riga["isFuturo"]
+        isScaduto = riga["isScaduto"]
+        isPartecipato = server.quizPartecipato(codice)
+        numDomande = riga["nDomande"]
+
+        record.append({"valore": codice})
+        record.append({"valore": titolo})
+        record.append({"valore": numDomande})
+        record.append({"valore": dataInizio})
+        record.append({"valore": dataFine})
+
+        if isAttivo == '1':
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-success'>Aperto</span>"),
+                          "impostazioni": {"class": "text-center"}})
+        elif isFuturo == '1':
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-info'>In apertura</span>"),
+                          "impostazioni": {"class": "text-center"}})
+        elif isScaduto == '1':
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-danger'>Terminato</span>"),
+                          "impostazioni": {"class": "text-center"}})
+        if isPartecipato > 0:
+            record.append({"valore": mark_safe("<div class='btn-group'>\
+                                    <button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'\
+                                        aria-haspopup='true' aria-expanded='false'>\
+                                        <i class='fa-solid fa-bars'></i>\
+                                    </button>\
+                                    <div class='dropdown-menu'>\
+                                        <a class='dropdown-item' href='#'><i class='fa-solid fa-pen'></i> Modifica</a>\
+                                    </div>\
+                                </div>"),
+                           "impostazioni": {"class": "text-center"}})
+        else:
+            record.append({"valore": mark_safe("<div class='btn-group'>\
+                                    <button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'\
+                                        aria-haspopup='true' aria-expanded='false'>\
+                                        <i class='fa-solid fa-bars'></i>\
+                                    </button>\
+                                    <div class='dropdown-menu'>\
+                                        <a class='dropdown-item' href='#'><i class='fa-solid fa-pen'></i> Modifica</a>\
+                                        <a class='dropdown-item' href='#' onclick='confermaEliminazione()'><i class='fa-solid fa-trash'></i> Elimina</a>\
+                                    </div>\
+                                </div>"),
+                          "impostazioni": {"class": "text-center"}})
+
+        record.append({"valore": annoInizio})
+        risultato.append(record)
+
+    listaIntestazioni = [{"valore": "Codice"}, {"valore": "Titolo"}, {"valore": "# Domande"}, {
+        "valore": "Data Apertura"}, {"valore": "Data Chiusura"}, {"valore": ""}, {"valore": ""}, {"valore": "Anno Inizio"}]
+    context["risultati"] = {"risultato": risultato,
+                            "listaIntestazioni": listaIntestazioni}
+
+    template = loader.get_template(imieiquizTemplateName)
+    page = template.render(context=context, request=request)
+    res.write(page)
+    return res

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <title>STENDIQUIZ</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% include "commons/import_comuni.html" %}
+    {% load static %}
+    <script src="{% static 'js/imieiquiz.js' %}"></script>
+</head>
+
+<body onLoad="includiFile(); caricaMieiQuiz();">
+    <!--Message Box-->
+    {% include "commons/message_box.html" %}
+    <!--Yes/No Message-->
+    {% include "commons/yes_no_message.html" %}
+    <div class="wrapper d-flex align-items-stretch">
+        <!--Sidebar-->
+        <nav id="sidebar" data-include="sidebar"></nav>
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5 pt-5 d-flex flex-row justify-content-center align-items-center">
+            <div class="container-fluid">
+                <!--Breadcrumb-->
+                {% include "commons/breadcrumb.html" %}
+                <table id="tabellaQuiz" class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            {% for cella in risultati.listaIntestazioni %}
+                            <th {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}'
+                                {%endfor%}>
+                                {{cella.valore}}
+                            </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for riga in risultati.risultato %}
+                        <tr>
+                            {% for cella in riga %}
+                            <td {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}'
+                                {%endfor%}>
+                                {{cella.valore}}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--Footer-->
+    {% include "commons/footer.html" %}
+</body>
+
+</html>

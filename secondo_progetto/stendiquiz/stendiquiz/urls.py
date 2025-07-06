@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', controller.index, name='index'),
     path('gioca', controller.gioca, name='gioca'),
+    path('imieiquiz', controller.imieiquiz, name='imieiquiz'),
 ]

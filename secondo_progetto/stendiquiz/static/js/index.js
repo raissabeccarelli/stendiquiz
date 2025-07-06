@@ -1,7 +1,4 @@
 function caricaQuiz(data) {
-    DataTable.type('num', 'className', 'dt-body-right');
-    DataTable.type('html', 'className', 'dt-body-right');
-    DataTable.type('date', 'className', 'dt-body-right');
     var table = new DataTable('#tabellaQuiz',
         {
             columns: [
@@ -72,11 +69,11 @@ function caricaQuiz(data) {
         });
 
     table.on('select.dt', () => {
-        tabellaQuiz.searchPanes.rebuildPane(0, true);
+        table.searchPanes.rebuildPane(1, true);
     });
 
     table.on('deselect.dt', () => {
-        tabellaQuiz.searchPanes.rebuildPane(0, true);
+        table.searchPanes.rebuildPane(1, true);
     });
 
     $('#tabellaQuiz tbody').on('click', 'tr', function () {
@@ -93,7 +90,7 @@ function caricaQuiz(data) {
         }
         else {
             $("#messageBoxTitle").text("Quiz chiuso");
-            $("#messageBoxMessage").html("Il quiz \"" + nomeQuiz + "\" è stato chiuso il " + dataInizio + " e non accetta nuove partecipazioni.");
+            $("#messageBoxMessage").html("Il quiz \"" + nomeQuiz + "\" è stato chiuso il " + dataFine + " e non accetta nuove partecipazioni.");
             $("#messageBox").modal('show');
         }
     });
