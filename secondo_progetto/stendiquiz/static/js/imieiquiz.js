@@ -45,9 +45,10 @@ function caricaMieiQuiz(data) {
                     }
                 },
                 { targets: [3, 4], type: 'date', render: DataTable.render.date(), searchable: false },
-                { targets: [0, 7], type: 'integer', visible: false, orderable: false },
-                { targets: 5, type: 'html' },
+                { targets: 0, type: 'integer', visible: false, orderable: false },
+                { targets: 5, type: 'html', searchPanes: { threshold: 1 } },
                 { targets: 6, type: 'html', orderable: false, searchable: false, searchPanes: { show: false } },
+                { targets: 7, type: 'integer', visible: false, searchPanes: { show: true, threshold: 1 }, },
             ],
             responsive: true,
             lengthMenu: [10, 25, 50, -1],
@@ -86,12 +87,39 @@ function caricaMieiQuiz(data) {
             }
         }
     });
+
+    $('#tabellaQuiz tbody').on('click', '.conferma-eliminazione', function () {
+        var riga = table.row($(this).closest('tr'));
+        var codiceQuiz = riga.data()[0];
+        var nomeQuiz = riga.data()[1];
+        $("#primaryButton").addClass("btn-danger");
+        $("#yesNoMessageTitle").text("Conferma eliminazione");
+        $("#yesNoMessageMessage").text("Sei sicuro di voler eliminare il quiz \"" + nomeQuiz + "\"? Questa azione non può essere annullata.");
+        $("#primaryButton").append("Elimina");
+        $("#primaryButton").on("click", eliminaQuiz);
+        $("#quizCodice").text(codiceQuiz);
+        $("#yesNoMessage").modal('show');
+    });
+
+    $('#tabellaQuiz tbody').on('click', '.conferma-modifica', function () {
+        $("#modificaQuizModal").modal('show');
+    });
 }
 
-function confermaEliminazione() {
-    $("#primaryButton").addClass("btn-danger");
-    $("#yesNoMessageTitle").text("Conferma eliminazione");
-    $("#yesNoMessageMessage").text("Sei sicuro di voler eliminare questo quiz? Questa azione non può essere annullata.");
-    $("#yesNoMessage").modal('show');
-
+function eliminaQuiz() {
+    var codiceQuiz = $("#quizCodice").text();
+    data = { funzione: "eliminaQuiz", codice: codiceQuiz };
+    $('#primaryButton .spinner-border').removeClass('d-none');
+    $.getJSON("funzionalitaDB", data,
+        function (data, textStatus, jqXHR) {
+            if ("esito" in data) {
+                $("#alertSuccess").removeClass("d-none");
+                setTimeout(function () {
+                    window.location.href = "imieiquiz"
+                }, 3000);
+            } else {
+                window.location.href = "errore?title=" + encodeURIComponent("502 Internal Server Error") + "&message=" + encodeURIComponent("Si è verificato un errore durante l'eliminazione del quiz. Riprovare più tardi");
+            }
+        }
+    );
 }

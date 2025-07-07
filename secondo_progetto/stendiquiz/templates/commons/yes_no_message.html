@@ -11,9 +11,12 @@
                 <h6 class="mb-3" id="yesNoMessageMessage"></h6>
             </div>
             <div class="modal-footer">
-                <button id="primaryButton" type="button" class="btn" data-dismiss="modal">Elimina</button>
-                <button id="secondaryButton" type="button" class="btn btn-secondary"
-                    data-dismiss="modal">Annulla</button>
+                <button id="primaryButton" type="button" class="btn">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    <span class="sr-only">Elaborazione...</span>
+                </button>
+                <button id="secondaryButton" type="button" class="btn btn-light" data-dismiss="modal">Annulla</button>
+                <input id="quizCodice" type="hidden" value="" />
             </div>
         </div>
     </div>

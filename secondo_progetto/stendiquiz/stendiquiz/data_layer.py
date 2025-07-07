@@ -149,3 +149,60 @@ def quizPartecipato(codiceQuiz):
         codiceQuiz)
     ris = eseguiQuery(query)
     return len(ris) > 0
+
+
+def funzionalitaDB(request):
+
+    def parametroMancante(parametro):
+        errore = {"errore": "Manca il parametro '{}'.".format(
+            parametro), "codiceErrore": 1}
+        return json.dumps(errore)
+
+    def inviaOK(res):
+        risposta = {"esito": "ok"}
+        res.write(json.dumps(risposta))
+        return res
+
+    def trovaParametro(parametri, parametroDaTrovare):
+        for parametro in parametroDaTrovare:
+            if not parametro in parametri:
+                return parametro
+
+        return "ok"
+
+    res = HttpResponse(content_type="application/json")
+
+    parametri = request.GET
+
+    if not "funzione" in parametri:
+        errore = {"errore": "Nome della funzione non inserito", "codiceErrore": 0}
+        res.write(json.dumps(errore))
+        return res
+
+    if parametri["funzione"] == "eliminaQuiz":
+        errore = trovaParametro(parametri, ["codice"])
+        if errore != "ok":
+            res.write(parametroMancante(errore))
+            return res
+
+        codice = parametri["codice"]
+
+        eliminaQuiz(codice)
+        if not esisteQuiz(codice):
+            return inviaOK(res)
+        else:
+            errore = {"errore": "Il quiz '{}' non è stato eliminato".format(
+                codice), "codiceErrore": 2}
+            res.write(json.dumps(errore))
+            return res
+
+
+def eliminaQuiz(codice=0):
+    query_elimina_risposte = "DELETE FROM Risposte WHERE QUIZCODICE = {}".format(
+        codice)
+    query_elimina_domanda = "DELETE FROM Domande WHERE QUIZCODICE = {}".format(
+        codice)
+    query_elimina_quiz = "DELETE FROM Quiz WHERE CODICE = {}".format(codice)
+    eseguiQuery(query_elimina_risposte)
+    eseguiQuery(query_elimina_domanda)
+    eseguiQuery(query_elimina_quiz)

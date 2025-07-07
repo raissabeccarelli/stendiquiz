@@ -7,29 +7,31 @@
     <title>STENDIQUIZ</title>
     {% include "commons/import_comuni.html" %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/error.css' %}">
-    <script src="{% static 'js/error.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/errore.css' %}">
+    <script src="{% static 'js/errore.js' %}"></script>
 </head>
 
 <body>
-    <div class="container">
-        <div class="error-container">
-            <h1 class="error-title">{{title}}</h1>
-            <p class="error-description">
-              {{message}}
-            </p>
-            <div class="mb-4">
-                <a href="/" class="btn btn-primary">
-                    Torna alla Home
-                </a>
-                <button class="btn btn-secondary">
-                    Torna Indietro
-                </button>
+    <div class="wrapper d-flex align-items-stretch">
+        <div id="content" class="p-4 p-md-5 pt-5 d-flex flex-row justify-content-center align-items-center">
+            <div class="error-container">
+                <h1 class="error-title">{{title}}</h1>
+                <p class="error-description">
+                    {{message}}
+                </p>
+                <div class="mb-4">
+                    <button class="btn btn-secondary">
+                        Torna Indietro
+                    </button>
+                    <a href="/" class="btn btn-primary">
+                        Torna alla Home
+                    </a>
+                </div>
             </div>
         </div>
-        <!--Footer-->
-        {% include "commons/footer.html" %}
     </div>
+    <!--Footer-->
+    {% include "commons/footer.html" %}
 </body>
 
 </html>

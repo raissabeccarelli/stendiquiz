@@ -11,6 +11,7 @@ import random
 indexTemplateName = "index.html"
 imieiquizTemplateName = "imieiquiz.html"
 giocaTemplateName = "gioca.html"
+erroreTemplateName = "errore.html"
 
 OPEN_QUIZ = "reindirizzaQUIZ(this)"
 OPEN_UTENTE = "reindirizzaUTENTE(this)"
@@ -197,7 +198,7 @@ def imieiquiz(request):
                                         <i class='fa-solid fa-bars'></i>\
                                     </button>\
                                     <div class='dropdown-menu'>\
-                                        <a class='dropdown-item' href='#'><i class='fa-solid fa-pen'></i> Modifica</a>\
+                                        <a class='dropdown-item conferma-modifica' href='#'><i class='fa-solid fa-pen'></i> Modifica</a>\
                                     </div>\
                                 </div>"),
                            "impostazioni": {"class": "text-center"}})
@@ -208,8 +209,8 @@ def imieiquiz(request):
                                         <i class='fa-solid fa-bars'></i>\
                                     </button>\
                                     <div class='dropdown-menu'>\
-                                        <a class='dropdown-item' href='#'><i class='fa-solid fa-pen'></i> Modifica</a>\
-                                        <a class='dropdown-item' href='#' onclick='confermaEliminazione()'><i class='fa-solid fa-trash'></i> Elimina</a>\
+                                        <a class='dropdown-item conferma-modifica' href='#'><i class='fa-solid fa-pen'></i> Modifica</a>\
+                                        <a class='dropdown-item conferma-eliminazione' href='#'><i class='fa-solid fa-trash'></i> Elimina</a>\
                                     </div>\
                                 </div>"),
                           "impostazioni": {"class": "text-center"}})
@@ -225,4 +226,17 @@ def imieiquiz(request):
     template = loader.get_template(imieiquizTemplateName)
     page = template.render(context=context, request=request)
     res.write(page)
+    return res
+
+def errore(request):
+    res = HttpResponse(content_type="text/html")
+    parametri = estrazioneQueryString(request)
+    context = {}
+    context["title"] = parametri["title"]
+    context["message"] = parametri["message"]
+    
+    template = loader.get_template(erroreTemplateName)
+    page = template.render(context=context, request=request)
+    res.write(page)
+    
     return res

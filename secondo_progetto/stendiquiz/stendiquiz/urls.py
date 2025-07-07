@@ -18,10 +18,13 @@ from django.contrib import admin
 from django.urls import path
 
 from . import controller
+from . import data_layer as server
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', controller.index, name='index'),
     path('gioca', controller.gioca, name='gioca'),
     path('imieiquiz', controller.imieiquiz, name='imieiquiz'),
+    path("funzionalitaDB", server.funzionalitaDB, name="funzionalitaDB"),
+    path("errore", controller.errore, name="errore"),
 ]
