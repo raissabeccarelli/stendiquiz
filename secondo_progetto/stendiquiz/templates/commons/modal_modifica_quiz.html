@@ -1,0 +1,54 @@
+<div class="modal fade modal" id="modificaQuizModal" tabindex="-1" role="dialog"
+    aria-labelledby="modificaQuizModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modificaQuizModalLabel">Modifica Quiz</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formModificaQuiz" novalidate>
+                    <div class="form-group">
+                        <label for="quizTitolo">Titolo</label>
+                        <input type="text" class="form-control" id="quizTitolo" name="titolo" required maxlength="200"
+                            placeholder="Inserisci il titolo del quiz">
+                        <small id="charCounter" class="form-text text-muted"></small>
+                        <div id="invalidFeedbackTitolo" class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dataInizio">Data Apertura</label>
+                                <input type="text" class="form-control" id="dataInizio" name="dataInizio" required>
+                                <div id="invalidFeedbackDataInizio" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dataFine">Data Chiusura</label>
+                                <input type="text" class="form-control" id="dataFine" name="dataFine" required>
+                                <div id="invalidFeedbackDataFine" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <input type="hidden" id="quizCodiceDaModificare" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSalva" type="submit" form="formModificaQuiz"
+                    class="btn btn-secondary d-inline-flex contenitore-loader">
+                    <div class="loader loader--style8 mr-2 d-none" data-include="loader"></div>
+                    <span class="sr-only">Elaborazione...</span>
+                    Salva
+                </button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Annulla</button>
+            </div>
+        </div>
+    </div>
+</div>

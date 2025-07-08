@@ -5,8 +5,8 @@ function caricaMieiQuiz(data) {
                 { "title": "Codice Quiz" },
                 { "title": "Titolo" },
                 { "title": "# Domande" },
-                { "title": "Data Inizio" },
-                { "title": "Data Fine" },
+                { "title": "Data Apertura" },
+                { "title": "Data Chiusura" },
                 { "title": "Stato" },
                 { "title": "Azioni" },
                 { "title": "Anno Inizio" },
@@ -95,13 +95,16 @@ function caricaMieiQuiz(data) {
         $("#primaryButton").addClass("btn-danger");
         $("#yesNoMessageTitle").text("Conferma eliminazione");
         $("#yesNoMessageMessage").text("Sei sicuro di voler eliminare il quiz \"" + nomeQuiz + "\"? Questa azione non può essere annullata.");
-        $("#primaryButton").append("Elimina");
+        if (!($("#primaryButton").text().includes("Elimina"))) {
+            $("#primaryButton").append("Elimina");
+        }
         $("#primaryButton").on("click", eliminaQuiz);
         $("#quizCodice").text(codiceQuiz);
         $("#yesNoMessage").modal('show');
     });
 
-    $('#tabellaQuiz tbody').on('click', '.conferma-modifica', function () {
+    $('#tabellaQuiz tbody').on('click', '.conferma-modifica', function (event) {
+        event.preventDefault();
         $("#modificaQuizModal").modal('show');
     });
 }
@@ -109,10 +112,11 @@ function caricaMieiQuiz(data) {
 function eliminaQuiz() {
     var codiceQuiz = $("#quizCodice").text();
     data = { funzione: "eliminaQuiz", codice: codiceQuiz };
-    $('#primaryButton .spinner-border').removeClass('d-none');
+     $('.contenitore-loader .loader').removeClass('d-none');
     $.getJSON("funzionalitaDB", data,
         function (data, textStatus, jqXHR) {
             if ("esito" in data) {
+                $("#alertSuccess").text("Il quiz è stato eliminato con successo! La pagina si ricaricherà tra qualche secondo.");
                 $("#alertSuccess").removeClass("d-none");
                 setTimeout(function () {
                     window.location.href = "imieiquiz"

@@ -37,7 +37,8 @@ def index(request):
     res = HttpResponse(content_type="text/html")
 
     context = {}
-    context["infoPagina"] = {"page": "Home", "root": ["Stendiquiz"]}
+    context["infoPagina"] = {"page": "Home", "root": [
+        {"pagina": "Stendiquiz", "link": "./"}]}
 
     rispostaServer = server.getQuiz(parametri={})
     risultato = []
@@ -158,7 +159,8 @@ def imieiquiz(request):
     res = HttpResponse(content_type="text/html")
 
     context = {}
-    context["infoPagina"] = {"page": "I miei quiz", "root": ["Stendiquiz"]}
+    context["infoPagina"] = {"page": "I miei quiz", "root": [
+        {"pagina": "Stendiquiz", "link": "./"}]}
 
     rispostaServer = server.getQuiz(parametri={"creatore": SUPER_USER})
     risultato = []
@@ -228,15 +230,16 @@ def imieiquiz(request):
     res.write(page)
     return res
 
+
 def errore(request):
     res = HttpResponse(content_type="text/html")
     parametri = estrazioneQueryString(request)
     context = {}
     context["title"] = parametri["title"]
     context["message"] = parametri["message"]
-    
+
     template = loader.get_template(erroreTemplateName)
     page = template.render(context=context, request=request)
     res.write(page)
-    
+
     return res

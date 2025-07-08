@@ -6,8 +6,8 @@ function caricaQuiz(data) {
                 { "title": "Titolo" },
                 { "title": "Creatore" },
                 { "title": "# Domande" },
-                { "title": "Data Inizio" },
-                { "title": "Data Fine" },
+                { "title": "Data Apertura" },
+                { "title": "Data Chiusura" },
                 { "title": "Stato" },
                 { "title": "Anno Inizio" }
             ],

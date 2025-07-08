@@ -1,3 +1,4 @@
+/*Posiziona alet logout all'inizio della pagina*/
 .top-page {
     margin-bottom: 0px;
 }
@@ -14,10 +15,6 @@ table thead,
     border-color: #993366;
 }
 
-.btn.btn.btn-secondary {
-    min-width: 65px;
-}
-
 .btn:disabled {
     cursor: not-allowed
 }
@@ -26,7 +23,6 @@ table thead,
     background-color: #8B5FBF;
     border-color: #8B5FBF;
     color: #fff;
-    outline-color: #8B5FBF;
 }
 
 .page-link:hover,
@@ -59,4 +55,20 @@ a:focus {
 
 .alert.alert-success {
     z-index: 10000;
+}
+
+svg path,
+svg rect {
+    fill: #fff;
+}
+
+.contenitore-loader {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.contenitore-loader .loader svg {
+    height: 1.5rem;
 }

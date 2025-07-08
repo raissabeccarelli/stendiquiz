@@ -7,14 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% include "commons/import_comuni.html" %}
     {% load static %}
+    <link rel="stylesheet" href="{%static 'jqueryui/jquery-ui.min.css' %}">
     <script src="{% static 'js/imieiquiz.js' %}"></script>
+    <script src="{% static 'js/modal_modifica_quiz.js' %}"></script>
+    <script src="{% static 'jqueryui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'jqueryui/datepicker-it.js' %}"></script>
 </head>
 
 <body onLoad="includiFile(); caricaMieiQuiz();">
-    <!--Alert-->
-    <div id="alertSuccess" class="alert alert-success fade show top-page d-none" role="alert">
-        Quiz eliminato con successo. La pagina si ricaricherà tra qualche secondo.
-    </div>
+    <!--Modale Modifica Quiz-->
+    {% include "commons/modal_modifica_quiz.html" %}
+    <!--Alert Modifica-->
+    <div id="alertSuccess" class="alert alert-success fade show fixed-top d-none" role="alert"></div>
+    <!--Alert Logout-->
+    {% include "commons/alert_logout.html" %}
     <!--Message Box-->
     {% include "commons/message_box.html" %}
     <!--Yes/No Message-->

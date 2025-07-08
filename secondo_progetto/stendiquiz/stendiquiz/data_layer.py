@@ -163,8 +163,8 @@ def funzionalitaDB(request):
         res.write(json.dumps(risposta))
         return res
 
-    def trovaParametro(parametri, parametroDaTrovare):
-        for parametro in parametroDaTrovare:
+    def trovaParametri(parametri, parametriDaTrovare):
+        for parametro in parametriDaTrovare:
             if not parametro in parametri:
                 return parametro
 
@@ -180,7 +180,7 @@ def funzionalitaDB(request):
         return res
 
     if parametri["funzione"] == "eliminaQuiz":
-        errore = trovaParametro(parametri, ["codice"])
+        errore = trovaParametri(parametri, ["codice"])
         if errore != "ok":
             res.write(parametroMancante(errore))
             return res
@@ -196,6 +196,21 @@ def funzionalitaDB(request):
             res.write(json.dumps(errore))
             return res
 
+    elif "modificaQuiz" == parametri["funzione"]:
+        errore = trovaParametri(
+            parametri, ["codice", "titolo", "dataInizio", "dataFine"])
+        if errore != "ok":
+            res.write(parametroMancante(errore))
+            return res
+
+        codice = parametri["codice"]
+        titolo = parametri["titolo"]
+        dataInizio = utilities.DataFormatoDataBase(parametri["dataInizio"])
+        dataFine = utilities.DataFormatoDataBase(parametri["dataFine"])
+
+        modificaQuiz(codice, titolo, dataInizio, dataFine)
+        return inviaOK(res)
+
 
 def eliminaQuiz(codice=0):
     query_elimina_risposte = "DELETE FROM Risposte WHERE QUIZCODICE = {}".format(
@@ -206,3 +221,9 @@ def eliminaQuiz(codice=0):
     eseguiQuery(query_elimina_risposte)
     eseguiQuery(query_elimina_domanda)
     eseguiQuery(query_elimina_quiz)
+
+
+def modificaQuiz(codice, titolo, dataInizio, dataFine):
+    query = "UPDATE Quiz SET TITOLO ='{}', DATAINIZIO ='{}', DATAFINE ='{}' WHERE CODICE = {}".format(
+        titolo, dataInizio, dataFine, codice)
+    eseguiQuery(query)
