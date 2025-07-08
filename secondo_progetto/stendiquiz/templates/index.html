@@ -12,9 +12,9 @@
 
 <body onLoad="includiFile(); caricaQuiz();">
 	<!--Message Box-->
-	{% include "commons/message_box.html" %}
+	<div data-include="message_box"></div>
 	<!--Alert Logout-->
-	{% include "commons/alert_logout.html" %}
+	<div data-include="alert_logout"></div>
 	<div class="wrapper d-flex align-items-stretch">
 		<!--Sidebar-->
 		<nav id="sidebar" data-include="sidebar"></nav>
@@ -51,7 +51,7 @@
 		</div>
 	</div>
 	<!--Footer-->
-	{% include "commons/footer.html" %}
+	<div data-include="footer"></div>
 </body>
 
 </html>

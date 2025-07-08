@@ -12,13 +12,9 @@
 
 <body onLoad="includiFile(); caricaQuiz();">
 	<!--Message Box-->
-	{% include "commons/message_box.html" %}
-	<div id="alertLogout" class="alert alert-info alert-dismissible fade show top-page d-none" role="alert">
-		Funzionalità non disponibile, sei autenticato come superuser.
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
+	<div data-include="message_box"></div>
+	<!--Alert Logout-->
+	<div data-include="alert_logout"></div>
 	<div class="wrapper d-flex align-items-stretch">
 		<!--Sidebar-->
 		<nav id="sidebar" data-include="sidebar"></nav>
@@ -31,7 +27,8 @@
 					<thead>
 						<tr>
 							{% for cella in risultati.listaIntestazioni %}
-							<th {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}' {%endfor%}>
+							<th {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}'
+								{%endfor%}>
 								{{cella.valore}}
 							</th>
 							{% endfor %}
@@ -41,7 +38,8 @@
 						{%for riga in risultati.risultato %}
 						<tr>
 							{% for cella in riga %}
-							<td {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}' {%endfor%}>
+							<td {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}'
+								{%endfor%}>
 								{{cella.valore}}
 							</td>
 							{% endfor %}
@@ -53,7 +51,7 @@
 		</div>
 	</div>
 	<!--Footer-->
-	{% include "commons/footer.html" %}
+	<div data-include="footer"></div>
 </body>
 
 </html>
