@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.utils.safestring import mark_safe
+from django.urls import reverse
+from urllib.parse import urlencode
 
 from . import utilities
 from . import data_layer as server
@@ -93,17 +95,26 @@ def gioca(request):
     '''
     res = HttpResponse(content_type="text/html")
     parametri = estrazioneQueryString(request)
+    if trovaParametri(parametri, ["codice"]) != "ok" or not server.esisteQuiz(parametri["codice"]):
+        params = {'title': '502 Bad Server',
+                  'message': 'Non è possibile recuperare le domande del quiz selezionato. Riprova più tardi.'}
+        query_string = urlencode(params)
+        base_url = reverse('errore')
+        url_con_parametri = f'{base_url}?{query_string}'
+        return redirect(url_con_parametri)
 
     context = {}
-    quiz = server.getQuiz(parametri["quizCodice"])
-    domandeDB = server.getDomandeQuiz(parametri["quizCodice"])
-    random.shuffle(domandeDB)
+
+    quiz = server.getQuiz(parametri={"codice": parametri["codice"]})
+
+    quiz = quiz[0]
+    domandeDB = server.getDomandeQuiz(parametri["codice"])
 
     domande = []
 
     for domanda in domandeDB:
         risposteDB = server.getRisposteDomandaQuiz(
-            codiceQuiz=parametri["quizCodice"], numeroDomanda=domanda["numero"])
+            codiceQuiz=parametri["codice"], numeroDomanda=domanda["numero"])
         random.shuffle(risposteDB)
         risposte = []
         domandaPunteggio = 2
@@ -114,7 +125,7 @@ def gioca(request):
             o_r["corretta"] = risposta["tipo"] == "Corretta"
             o_r["numero"] = risposta["numero"]
 
-            if not risposta["punteggio"] == None:
+            if o_r["corretta"]:
                 domandaPunteggio = risposta["punteggio"]
 
             risposte.append(o_r)
@@ -126,16 +137,17 @@ def gioca(request):
         o_d["risposte"] = risposte
 
         domande.append(o_d)
-
-        infoQuiz = {"idQuiz": quiz["codice"],
-                    "autore": quiz["creatore"],
+        infoQuiz = {"codiceQuiz": quiz["codice"],
+                    "creatore": quiz["creatore"],
                     "dataInizio": utilities.DataFormatoView(quiz["dataInizio"]),
                     "dataFine": utilities.DataFormatoView(quiz["dataFine"]),
                     "titolo": quiz["titolo"],
                     "domande": domande
                     }
+
     context = infoQuiz
-    context["infoPagina"] = {"nomePagina": "gioca"}
+    context["infoPagina"] = {"page": "Gioca", "root": [
+        {"pagina": "Stendiquiz", "link": "./"}]}
 
     template = loader.get_template(giocaTemplateName)
     page = template.render(context=context, request=request)
@@ -243,3 +255,11 @@ def errore(request):
     res.write(page)
 
     return res
+
+
+def trovaParametri(parametri, parametriDaTrovare):
+    for parametro in parametriDaTrovare:
+        if not parametro in parametri:
+            return parametro
+
+    return "ok"

@@ -72,3 +72,17 @@ svg rect {
 .contenitore-loader .loader svg {
     height: 1.5rem;
 }
+
+h2 {
+    font-weight: 700;
+    text-align: center;
+    color: #993366;
+}
+
+.domanda-quiz {
+    color: #993366;
+}
+
+.badge.badge-primary.badge-pill {
+    background-color: #993366;
+}

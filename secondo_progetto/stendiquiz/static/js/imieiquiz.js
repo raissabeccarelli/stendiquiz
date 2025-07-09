@@ -53,14 +53,15 @@ function caricaMieiQuiz(data) {
             responsive: true,
             lengthMenu: [10, 25, 50, -1],
             language: {
+                searchPanes: {
+                    clearMessage: 'Reset',
+                    collapse: { 0: 'Ricerca Avanzata', _: 'Ricerca Avanzata (%d)' }
+                },
                 url: '../static/datatables/it-IT.json',
             },
             layout: {
-                top1: {
-                    searchPanes: {
-                        cascadePanes: true,
-                        collapse: false
-                    }
+                topStart: {
+                    buttons: ['searchPanes']
                 }
             }
         });
@@ -74,7 +75,7 @@ function caricaMieiQuiz(data) {
             var dataInizio = table.row(this).data()[3];
             var dataFine = table.row(this).data()[4];
             if (table.row(this).data().at(-3).includes('Aperto')) {
-                window.location.href = "http://127.0.0.1/gioca?quizCodice=" + codiceQuiz;
+                window.location.href = "gioca?codice=" + codiceQuiz;
             } else if (table.row(this).data().at(-3).includes('In apertura')) {
                 $("#messageBoxTitle").text("Quiz in apertura");
                 $("#messageBoxMessage").html("Il quiz \"" + nomeQuiz + "\" aprirà il " + dataInizio + ".<br/> Riprovare in seguito.");
@@ -112,7 +113,7 @@ function caricaMieiQuiz(data) {
 function eliminaQuiz() {
     var codiceQuiz = $("#quizCodice").text();
     data = { funzione: "eliminaQuiz", codice: codiceQuiz };
-     $('.contenitore-loader .loader').removeClass('d-none');
+    $('.contenitore-loader .loader').removeClass('d-none');
     $.getJSON("funzionalitaDB", data,
         function (data, textStatus, jqXHR) {
             if ("esito" in data) {

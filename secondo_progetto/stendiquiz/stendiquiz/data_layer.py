@@ -211,6 +211,61 @@ def funzionalitaDB(request):
         modificaQuiz(codice, titolo, dataInizio, dataFine)
         return inviaOK(res)
 
+    elif parametri["funzione"] == "aggiungiPartecipazione":
+        errore = trovaParametri(
+            parametri, ["nomeUtente", "quizCodice", "dataPartecipazione"])
+        if errore != "ok":
+            res.write(parametroMancante(errore))
+            return res
+
+        nomeUtente = parametri["nomeUtente"]
+        codiceQuiz = parametri["quizCodice"]
+        dataPartecipazione = parametri["dataPartecipazione"]
+        esito = aggiungiPartecipazione(
+            nomeUtente, codiceQuiz, dataPartecipazione)
+        if esito == 1:
+            errore = {"errore": "L'utente non esiste nel DB", "codiceErrore": 2}
+            res.write(json.dumps(errore))
+            return res
+
+        return inviaOK(res)
+
+    elif "get_max_partecipazione" == parametri["funzione"]:
+        query = "SELECT MAX(CODICE) as codice FROM Partecipazioni"
+        risultato = eseguiQuery(query)
+        risposta = {"codice_partecipazione": risultato[0]["codice"]}
+        res.write(json.dumps(risposta))
+        return res
+
+    elif parametri["funzione"] == "inserisci_risposta_utente":
+        errore = trovaParametri(
+            parametri, ["partecipazione", "quizCodice", "domanda", "risposta"])
+        if errore != "ok":
+            res.write(parametroMancante(errore))
+            return res
+
+        partecipazione = parametri["partecipazione"]
+        codiceQuiz = parametri["quizCodice"]
+        domanda = parametri["domanda"]
+        risposta = parametri["risposta"]
+
+        esito = aggiungiRispostaPartecipazione(
+            partecipazione, codiceQuiz, domanda, risposta)
+
+        # ? Non esiste la partecipazione
+        if esito == 1:
+            errore = {"errore": "La partecipazione '{}' non esiste nel DB".format(
+                partecipazione), "codiceErrore": 2}
+            res.write(json.dumps(errore))
+            return res
+        if esito == 2:
+            errore = {"errore": "Il quiz '{}' non esiste nel DB".format(
+                codiceQuiz), "codiceErrore": 2}
+            res.write(json.dumps(errore))
+            return res
+
+        return inviaOK(res)
+
 
 def eliminaQuiz(codice=0):
     query_elimina_risposte = "DELETE FROM Risposte WHERE QUIZCODICE = {}".format(
@@ -227,3 +282,40 @@ def modificaQuiz(codice, titolo, dataInizio, dataFine):
     query = "UPDATE Quiz SET TITOLO ='{}', DATAINIZIO ='{}', DATAFINE ='{}' WHERE CODICE = {}".format(
         titolo, dataInizio, dataFine, codice)
     eseguiQuery(query)
+
+
+def esisteUtente(nomeUtente):
+    query = "SELECT * FROM Utenti WHERE NOMEUTENTE = '{}'".format(nomeUtente)
+    ris = eseguiQuery(query)
+    return len(ris) > 0
+
+
+def aggiungiPartecipazione(nomeUtente, codiceQuiz, dataPartecipazione):
+    if not esisteUtente(nomeUtente):
+        return 1
+    query = "INSERT INTO Partecipazioni(`NOMEUTENTE`, `QUIZCODICE`, `DATA`) VALUES ('{}','{}','{}')".format(
+        nomeUtente, codiceQuiz, dataPartecipazione)
+    eseguiQuery(query)
+    return 0
+
+
+def esistePartecipazione(partecipazione):
+    query = "SELECT * FROM Partecipazioni WHERE CODICE = {}".format(
+        partecipazione)
+    ris = eseguiQuery(query)
+
+    return len(ris) > 0
+
+
+def aggiungiRispostaPartecipazione(partecipazione, quizCodice, domanda, risposta):
+
+    if not esistePartecipazione(partecipazione):
+        return 1
+    if not esisteQuiz(quizCodice):
+        return 2
+
+    query = "INSERT INTO RispostaUtenteQuiz(`PARTECIPAZIONE`, `CODICEQUIZ`, `CODICEDOMANDA`, `CODICERISPOSTA`) VALUES ('{}','{}','{}','{}')".format(
+        partecipazione, quizCodice, domanda, risposta)
+    print(query)
+    #eseguiQuery(query)
+    return 0
