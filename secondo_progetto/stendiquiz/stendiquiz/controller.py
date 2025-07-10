@@ -7,6 +7,10 @@ from urllib.parse import urlencode
 
 from . import utilities
 from . import data_layer as server
+from django.http import JsonResponse, HttpResponseBadRequest
+from .data_layer import salvaQuizNelDB
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 import random
 
@@ -256,4 +260,17 @@ def trovaParametri(parametri, parametriDaTrovare):
 def creaquiz(request):
     return render(request, 'creaquiz.html')
 
+@csrf_exempt
+def salva_quiz_api(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Metodo non supportato")
 
+    try:
+        data = json.loads(request.body)
+        codice = salvaQuizNelDB(data)
+        if codice:
+            return JsonResponse({"success": True, "codice_quiz": codice})
+        else:
+            return JsonResponse({"success": False, "errore": "Quiz non salvato"})
+    except Exception as e:
+        return JsonResponse({"success": False, "errore": str(e)}, status=500)

@@ -20,6 +20,7 @@ from django.urls import path
 from . import controller
 from . import data_layer as server
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', controller.index, name='index'),
@@ -28,5 +29,6 @@ urlpatterns = [
     path("funzionalitaDB", server.funzionalitaDB, name="funzionalitaDB"),
     path("errore", controller.errore, name="errore"),
     path("creaquiz", controller.creaquiz, name="creaquiz"),
+    path("api/salva_quiz/", controller.salva_quiz_api, name="salva_quiz_api"),
 
 ]
