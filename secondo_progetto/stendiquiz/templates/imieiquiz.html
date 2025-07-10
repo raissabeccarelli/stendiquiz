@@ -9,7 +9,6 @@
     {% load static %}
     <link rel="stylesheet" href="{%static 'jqueryui/jquery-ui.min.css' %}">
     <script src="{% static 'js/imieiquiz.js' %}"></script>
-    <script src="{% static 'js/modal_modifica_quiz.js' %}"></script>
     <script src="{% static 'jqueryui/jquery-ui.min.js' %}"></script>
     <script src="{% static 'jqueryui/datepicker-it.js' %}"></script>
 </head>
@@ -25,13 +24,15 @@
     <div data-include="message_box"></div>
     <!--Yes/No Message-->
     {% include "commons/yes_no_message.html" %}
+    <!--Modale creazione-->
+    {% include 'modale_creaquiz.html' %}
     <div class="wrapper d-flex align-items-stretch">
         <!--Sidebar-->
         <nav id="sidebar" data-include="sidebar"></nav>
         <!--Modale creazione-->
-		{% include 'modale_creaquiz.html' %}
-		<!-- JS PER IL MODALE -->
-		<script src="{% static 'js/quiz_modal.js' %}"></script>
+        {% include 'modale_creaquiz.html' %}
+        <!-- JS PER IL MODALE -->
+        <script src="{% static 'js/quiz_modal.js' %}"></script>
         <!-- Page Content  -->
         <div id="content" class="p-4 p-md-5 pt-5 d-flex flex-row justify-content-center align-items-center">
             <div class="container-fluid">

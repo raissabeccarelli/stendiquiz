@@ -319,6 +319,7 @@ def aggiungiRispostaPartecipazione(partecipazione, quizCodice, domanda, risposta
     eseguiQuery(query)
     return 0
 
+
 def salvaQuizNelDB(payload):
     def escape(s):
         """Escapa apici singoli e doppi per evitare errori SQL via GET."""
@@ -330,21 +331,18 @@ def salvaQuizNelDB(payload):
     dataFine = escape(payload["data_fine"])
     domande = payload["domande"]
 
-    # 1. Inserisci il quiz
     query_quiz = f"""
         INSERT INTO Quiz (TITOLO, CREATORE, DATAINIZIO, DATAFINE)
         VALUES ('{titolo}', '{autore}', '{dataInizio}', '{dataFine}')
     """
     eseguiQuery(query_quiz)
 
-    # 2. Recupera il codice del quiz appena creato
     query_get_codice = "SELECT MAX(CODICE) as codice FROM Quiz"
     result = eseguiQuery(query_get_codice)
     if not result:
         return None
     quiz_codice = result[0]["codice"]
 
-    # 3. Inserisci domande e risposte
     for idx, domanda in enumerate(domande, start=1):
         testo_domanda = escape(domanda["testo"])
         query_domanda = f"""
@@ -355,8 +353,8 @@ def salvaQuizNelDB(payload):
 
         for j, risposta in enumerate(domanda["opzioni"], start=1):
             testo_risposta = escape(risposta["testo"])
-            punteggio = int(risposta.get("punteggio", 0))  # default a 0
-            tipo = risposta.get("tipo", "sbagliata").capitalize()  # 'Corretta' o 'Sbagliata'
+            punteggio = int(risposta.get("punteggio", 0))  
+            tipo = risposta.get("tipo", "sbagliata").capitalize()
 
             query_risposta = f"""
                 INSERT INTO Risposte (QUIZCODICE, DOMANDA, NUMERO, TESTO, TIPORISPOSTA, PUNTEGGIO)
@@ -365,3 +363,28 @@ def salvaQuizNelDB(payload):
             eseguiQuery(query_risposta)
 
     return quiz_codice
+
+
+def getPartecipazione(parametri):
+
+    QUERY = "SELECT Partecipazioni.CODICE AS codice , Partecipazioni.NOMEUTENTE AS nomeUtente , Quiz.TITOLO AS quiz, Quiz.CODICE AS codiceQuiz, Partecipazioni.DATA AS data, COUNT(RispostaUtenteQuiz.CODICERISPOSTA) AS nRisposte, SUM(Risposte.PUNTEGGIO) AS punteggioOttenuto, (SELECT SUM(Risposte2.PUNTEGGIO) FROM Risposte AS Risposte2 WHERE Risposte2.QUIZCODICE = Quiz.CODICE) AS punteggioMassimo FROM (Partecipazioni JOIN RispostaUtenteQuiz ON Partecipazioni.CODICE = RispostaUtenteQuiz.PARTECIPAZIONE) JOIN Quiz ON Partecipazioni.QUIZCODICE = Quiz.CODICE JOIN Risposte ON Risposte.QUIZCODICE = RispostaUtenteQuiz.CODICEQUIZ AND Risposte.DOMANDA = RispostaUtenteQuiz.CODICEDOMANDA AND Risposte.NUMERO = RispostaUtenteQuiz.CODICERISPOSTA "
+    GROUP_BY = " GROUP BY Partecipazioni.CODICE "
+
+    ORDER_BY = " ORDER BY Partecipazioni.CODICE "
+
+    condizioniWhere = ""
+
+    if "codice" in parametri:
+        condizioniWhere = aggiungiCondizioneWhere(
+            condizione=condizioniWhere, nome="Partecipazioni.CODICE", valore=parametri["codice"], tipologia=TIPOLOGIA_RICERCA["noLike"])
+
+    if "nomeUtente" in parametri:
+        tipologia = TIPOLOGIA_RICERCA["like"]
+        condizioniWhere = aggiungiCondizioneWhere(
+            condizione=condizioniWhere, nome="Partecipazioni.NOMEUTENTE", valore=parametri["nomeUtente"], tipologia=tipologia)
+
+    query = QUERY + condizioniWhere + GROUP_BY + ORDER_BY
+
+    risultati = eseguiQuery(query)
+
+    return risultati

@@ -17,12 +17,12 @@
 	<!--Alert Partecipazione-->
 	<div id="alertSuccess" class="alert alert-success fade show fixed-top d-none" role="alert"></div>
 	<div class="wrapper d-flex align-items-stretch">
+	<!--Modale creazione-->
+	{% include 'modale_creaquiz.html' %}
 		<!--Sidebar-->
 		<nav id="sidebar" data-include="sidebar"></nav>
 		<!--Modale creazione-->
 		{% include 'modale_creaquiz.html' %}
-		<!-- JS PER IL MODALE -->
-		<script src="{% static 'js/quiz_modal.js' %}"></script>
 		<!-- Page Content  -->
 		<div id="content" class="p-4 p-md-5 pt-5 d-flex flex-row justify-content-center align-items-center">
 			<div class="container-fluid">
