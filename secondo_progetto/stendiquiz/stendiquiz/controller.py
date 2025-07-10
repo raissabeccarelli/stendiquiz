@@ -29,13 +29,8 @@ def estrazioneQueryString(request):
     parametri = {k: v[0] if len(v) == 1 else v for k, v in parametri.lists()}
     return parametri
 
-# Creare una funzione per ogni pagina da visualizzare
-
 
 def index(request):
-    '''
-    Controllore pagina index
-    '''
     res = HttpResponse(content_type="text/html")
 
     context = {}
@@ -90,9 +85,6 @@ def index(request):
 
 
 def gioca(request):
-    '''
-    Controllore pagina gioca
-    '''
     res = HttpResponse(content_type="text/html")
     parametri = estrazioneQueryString(request)
     if trovaParametri(parametri, ["codice"]) != "ok" or not server.esisteQuiz(parametri["codice"]):
@@ -165,9 +157,6 @@ def error_page(request, title, message):
 
 
 def imieiquiz(request):
-    '''
-    Controllore pagina I miei quiz
-    '''
     res = HttpResponse(content_type="text/html")
 
     context = {}

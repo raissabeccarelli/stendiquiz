@@ -14,36 +14,33 @@ $(document).ready(function () {
     $('#btnInviaRisposte').on('click', function (event) {
         var quizCodice = getQuizCodice();
         $('.contenitore-loader .loader').removeClass('d-none');
-        inserisciPartecipazione(quizCodice);
-        /*
-        $('.formGioca input[type="radio"]:checked').each(function () {
-            var risposteSelezionate = [];
-            let nomeDomanda = $(this).closest('.formGioca').attr('numeroDomanda');
-            let valoreRisposta = $(this).attr('numeroRisposta');
-            risposteSelezionate[nomeDomanda] = valoreRisposta;
-            for (k = 0; k < risposteSelezionate.length; k++) {
-                inserisciRispostaUtente(codicePartecipazione, quizCodice, k, risposteSelezionate[k]);
-            }
-            if ("esito" in data) {
-                $("#alertSuccess").text("La partecipazione è stata registrata con successo! La pagina si ricaricherà tra qualche secondo.");
-                $("#alertSuccess").removeClass("d-none");
-                setTimeout(function () {
-                    window.location.href = "/"
-                }, 3000);
+        inserisciPartecipazione(quizCodice, function (risultatoAjax) {
+            if (risultatoAjax && "esito" in risultatoAjax) {
+                getCodicePartecipazione(function (risultatoAjax) {
+                    codicePartecipazione = risultatoAjax;
+                    registraRisposte(codicePartecipazione, quizCodice, function (risultatoAjax) {
+                        if (risultatoAjax && "esito" in risultatoAjax) {
+                            $("#alertSuccess").text("La partecipazione è stata registrata con successo! La pagina si ricaricherà tra qualche secondo.");
+                            $("#alertSuccess").removeClass("d-none");
+                            setTimeout(function () {
+                                window.location.href = "/"
+                            }, 3000);
+                        }
+                    });
+                });
             } else {
-                window.location.href = "errore?title=" + encodeURIComponent("502 Internal Server Error") + "&message=" + encodeURIComponent("Si è verificato un errore durante la registrazione della partecipazione al quiz. Riprovare più tardi");
+                console.log("La chiamata AJAX è fallita o non ha restituito un esito.");
             }
 
         });
-        */
+
     });
 });
-
 function getQuizCodice() {
     return $("#quizCodice").val();
 }
 
-function inserisciPartecipazione(quizCodice) {
+function inserisciPartecipazione(quizCodice, callback) {
     let data = new Date();
     data = data.toISOString().split('T')[0];
 
@@ -58,32 +55,41 @@ function inserisciPartecipazione(quizCodice) {
         url: "funzionalitaDB",
         data: dati,
         dataType: "json",
-        async: false,
         success: function (data, textStatus, jqXHR) {
-            if (!("esito" in data)) {
-                window.location.href = "errore?title=" + encodeURIComponent("502 Internal Server Error") + "&message=" + encodeURIComponent("Si è verificato un errore durante la registrazione della partecipazione al quiz. Riprovare più tardi");
-            }
+            callback(data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            console.error("Errore durante la chiamata sincrona:", textStatus, errorThrown);
+            callback(null);
         }
     });
 }
 
-function inserisciRispostaUtente(partecipazione, codiceQuiz, domanda, risposta) {
+function inserisciRispostaUtente(partecipazione, codiceQuiz, domanda, risposta, callback) {
     data = { funzione: "inserisci_risposta_utente", partecipazione: partecipazione, quizCodice: codiceQuiz, domanda: domanda, risposta: risposta };
     $.getJSON("funzionalitaDB", data,
         function (data, textStatus, jqXHR) {
             if (!("esito" in data)) {
-                console.error(data["errore"] + " Codice: " + data["codiceErrore"])
+                window.location.href = "errore?title=" + encodeURIComponent("502 Internal Server Error") + "&message=" + encodeURIComponent("Si è verificato un errore durante la registrazione della partecipazione al quiz. Riprovare più tardi");
             }
         });
 }
 
-function getCodicePartecipazione() {
+function getCodicePartecipazione(callback) {
     data = { funzione: "get_max_partecipazione" };
     $.getJSON("funzionalitaDB", data,
         function (data, textStatus, jqXHR) {
             codicePartecipazione = parseInt(data["codice_partecipazione"]);
+            callback(codicePartecipazione);
         });
+}
+
+function registraRisposte(codicePartecipazione, quizCodice, callback) {
+    $('.formGioca input[type="radio"]:checked').each(function () {
+        var risposteSelezionate = [];
+        let nomeDomanda = $(this).closest('.formGioca').attr('numeroDomanda');
+        let valoreRisposta = $(this).attr('numeroRisposta');
+        inserisciRispostaUtente(codicePartecipazione, quizCodice, nomeDomanda, valoreRisposta, function (rispostaAjax) { });
+    });
+    risposta = { "esito": "ok" };
+    callback(risposta);
 }

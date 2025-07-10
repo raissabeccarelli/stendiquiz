@@ -316,6 +316,5 @@ def aggiungiRispostaPartecipazione(partecipazione, quizCodice, domanda, risposta
 
     query = "INSERT INTO RispostaUtenteQuiz(`PARTECIPAZIONE`, `CODICEQUIZ`, `CODICEDOMANDA`, `CODICERISPOSTA`) VALUES ('{}','{}','{}','{}')".format(
         partecipazione, quizCodice, domanda, risposta)
-    print(query)
-    #eseguiQuery(query)
+    eseguiQuery(query)
     return 0
