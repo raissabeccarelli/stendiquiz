@@ -252,3 +252,8 @@ def trovaParametri(parametri, parametriDaTrovare):
             return parametro
 
     return "ok"
+
+def creaquiz(request):
+    return render(request, 'creaquiz.html')
+
+

@@ -27,4 +27,6 @@ urlpatterns = [
     path('imieiquiz', controller.imieiquiz, name='imieiquiz'),
     path("funzionalitaDB", server.funzionalitaDB, name="funzionalitaDB"),
     path("errore", controller.errore, name="errore"),
+    path("creaquiz", controller.creaquiz, name="creaquiz"),
+
 ]

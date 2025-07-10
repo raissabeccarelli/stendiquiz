@@ -1,0 +1,44 @@
+<div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="quizForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="quizModalLabel">Crea un nuovo quiz</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Info quiz -->
+          <div class="mb-3">
+            <label for="titolo" class="form-label">Titolo:</label>
+            <input type="text" class="form-control" id="titolo" name="titolo" required>
+          </div>
+          <div class="mb-3">
+            <label for="autore" class="form-label">Autore:</label>
+            <input type="text" class="form-control" id="autore" name="autore" required>
+          </div>
+          <div class="mb-3">
+            <label for="data_inizio" class="form-label">Data inizio:</label>
+            <input type="date" class="form-control" id="data_inizio" name="data_inizio" required>
+          </div>
+          <div class="mb-3">
+            <label for="data_fine" class="form-label">Data fine:</label>
+            <input type="date" class="form-control" id="data_fine" name="data_fine" required>
+          </div>
+
+          <hr>
+          <!-- DOMANDE -->
+          <h5>Domande</h5>
+          <div id="domandeContainer"></div>
+          <button type="button" class="btn btn-outline-primary mt-3" id="aggiungiDomandaBtn">
+            + Aggiungi domanda
+          </button>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+          <button type="submit" class="btn btn-primary">Salva quiz</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
