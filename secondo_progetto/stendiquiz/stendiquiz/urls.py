@@ -30,5 +30,6 @@ urlpatterns = [
     path("errore", controller.errore, name="errore"),
     path("creaquiz", controller.creaquiz, name="creaquiz"),
     path("api/salva_quiz/", controller.salva_quiz_api, name="salva_quiz_api"),
-
+    path("visualizzapartecipazione", controller.visualizzapartecipazione,
+         name="visualizzapartecipazione"),
 ]

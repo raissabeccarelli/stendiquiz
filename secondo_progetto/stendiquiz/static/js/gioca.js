@@ -23,7 +23,7 @@ $(document).ready(function () {
                             $("#alertSuccess").text("La partecipazione è stata registrata con successo! La pagina si ricaricherà tra qualche secondo.");
                             $("#alertSuccess").removeClass("d-none");
                             setTimeout(function () {
-                                window.location.href = "/"
+                                window.location.href = "visualizzapartecipazione?codice=" + codicePartecipazione;
                             }, 3000);
                         }
                     });

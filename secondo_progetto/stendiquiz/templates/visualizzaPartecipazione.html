@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risultati del Quiz</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Stili aggiuntivi per le icone */
+        .risposta-icona {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <h2 class="text-center mb-4">Ecco i tuoi risultati 📊</h2>
+            <p class="text-center text-muted mb-5">Rivedi le tue risposte qui sotto.</p>
+
+            <div id="container-risultati"></div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    
+    // --- DATI DI ESEMPIO ---
+    // In un'app reale, questi dati arriverebbero dal server (es. da Django)
+    const datiQuiz = [
+        {
+            idDomanda: 1,
+            testoDomanda: "Quale pianeta è conosciuto come il 'Pianeta Rosso'?",
+            risposte: [
+                { id: "a", testo: "Venere" },
+                { id: "b", testo: "Marte" },
+                { id: "c", testo: "Giove" }
+            ],
+            idRispostaCorretta: "b",
+            idRispostaUtente: "b" // L'utente ha risposto correttamente
+        },
+        {
+            idDomanda: 2,
+            testoDomanda: "Qual è la capitale dell'Italia?",
+            risposte: [
+                { id: "a", testo: "Roma" },
+                { id: "b", testo: "Milano" },
+                { id: "c", testo: "Napoli" }
+            ],
+            idRispostaCorretta: "a",
+            idRispostaUtente: "b" // L'utente ha risposto in modo sbagliato
+        },
+        {
+            idDomanda: 3,
+            testoDomanda: "Quale di questi non è un linguaggio di programmazione?",
+            risposte: [
+                { id: "a", testo: "HTML" },
+                { id: "b", testo: "Python" },
+                { id: "c", testo: "Java" }
+            ],
+            idRispostaCorretta: "a",
+            idRispostaUtente: null // L'utente non ha risposto
+        }
+    ];
+    // --- FINE DATI DI ESEMPIO ---
+
+
+    // Seleziona il contenitore dove inserire i risultati
+    const container = $('#container-risultati');
+
+    // Itera su ogni domanda nei dati del quiz
+    $.each(datiQuiz, function(index, domanda) {
+        
+        let cardHtml = '';
+        const rispostaCorretta = domanda.idRispostaUtente === domanda.idRispostaCorretta;
+        const nonRisposto = domanda.idRispostaUtente === null;
+
+        // Determina lo stile della card (bordo e header) in base al risultato
+        let cardClass = 'border-warning'; // Default per non risposto
+        let headerText = 'Domanda ' + domanda.idDomanda + ' - Non Risposto 🟡';
+        if (!nonRisposto) {
+            if (rispostaCorretta) {
+                cardClass = 'border-success';
+                headerText = 'Domanda ' + domanda.idDomanda + ' - Risposta Corretta! ✅';
+            } else {
+                cardClass = 'border-danger';
+                headerText = 'Domanda ' + domanda.idDomanda + ' - Risposta Sbagliata! ❌';
+            }
+        }
+        
+        // Inizia a costruire l'HTML per la card
+        cardHtml += `<div class="card mb-4 ${cardClass}">
+                        <div class="card-header font-weight-bold">${headerText}</div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">${domanda.testoDomanda}</h5>
+                            <ul class="list-group list-group-flush">`;
+
+        // Itera su ogni possibile risposta per creare la lista
+        $.each(domanda.risposte, function(i, risposta) {
+            let itemClass = '';
+            let icona = '';
+
+            // Applica stili e icone a ogni opzione
+            if (risposta.id === domanda.idRispostaCorretta) {
+                // Questa è la risposta giusta
+                itemClass = 'list-group-item-success';
+                icona = '<span class="risposta-icona">✔️</span>';
+            }
+            
+            if (risposta.id === domanda.idRispostaUtente && !rispostaCorretta) {
+                // Questa è la risposta sbagliata data dall'utente
+                itemClass = 'list-group-item-danger';
+                icona = '<span class="risposta-icona">❌</span>';
+            }
+
+            cardHtml += `<li class="list-group-item ${itemClass}">${icona}${risposta.testo}</li>`;
+        });
+
+        // Chiudi i tag HTML
+        cardHtml += `</ul></div></div>`;
+
+        // Aggiungi la card appena creata al contenitore
+        container.append(cardHtml);
+    });
+});
+</script>
+
+</body>
+</html>

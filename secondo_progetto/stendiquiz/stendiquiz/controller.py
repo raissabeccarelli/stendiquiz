@@ -18,6 +18,7 @@ indexTemplateName = "index.html"
 imieiquizTemplateName = "imieiquiz.html"
 giocaTemplateName = "gioca.html"
 erroreTemplateName = "errore.html"
+visualizzaPartecipazioneTemplateName = "visualizzaPartecipazione.html"
 
 OPEN_QUIZ = "reindirizzaQUIZ(this)"
 OPEN_UTENTE = "reindirizzaUTENTE(this)"
@@ -257,8 +258,10 @@ def trovaParametri(parametri, parametriDaTrovare):
 
     return "ok"
 
+
 def creaquiz(request):
     return render(request, 'creaquiz.html')
+
 
 @csrf_exempt
 def salva_quiz_api(request):
@@ -274,3 +277,12 @@ def salva_quiz_api(request):
             return JsonResponse({"success": False, "errore": "Quiz non salvato"})
     except Exception as e:
         return JsonResponse({"success": False, "errore": str(e)}, status=500)
+
+
+def visualizzapartecipazione(request):
+    res = HttpResponse(content_type="text/html")
+    context = {}
+    template = loader.get_template(visualizzaPartecipazioneTemplateName)
+    page = template.render(context=context, request=request)
+    res.write(page)
+    return res
