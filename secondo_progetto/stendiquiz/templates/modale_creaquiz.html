@@ -1,7 +1,7 @@
 <div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form id="quizForm">
+      <form id="quizForm" novalidate>
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         <div class="modal-header">
           <h5 class="modal-title" id="quizModalLabel">Crea un nuovo quiz</h5>
@@ -12,10 +12,6 @@
           <div class="mb-3">
             <label for="titolo" class="form-label">Titolo:</label>
             <input type="text" class="form-control" id="titolo" name="titolo" required>
-          </div>
-          <div class="mb-3">
-            <label for="autore" class="form-label">Autore:</label>
-            <input type="text" class="form-control" id="autore" name="autore" required>
           </div>
           <div class="mb-3">
             <label for="data_inizio" class="form-label">Data inizio:</label>
@@ -36,10 +32,30 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Resetta</button>
+          <button type="button" class="btn btn-secondary" id="resetFormBtn">Resetta</button>
           <button type="submit" class="btn btn-primary">Salva quiz</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<!--
+<div class="modal fade" id="erroreMessage" tabindex="-1" role="dialog" aria-labelledby="erroreMessageLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="erroreMessageTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="mb-3" id="erroreMessageMessage"></h6>
+            </div>
+            <div class="modal-footer">
+                <button id="primaryButton" type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                <button id="secondaryButton" type="button" class="btn btn-light" data-bs-dismiss="modal">Annulla</button>
+            </div>
+        </div>
+    </div>
+</div>
+-->

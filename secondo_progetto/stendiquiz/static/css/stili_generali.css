@@ -86,3 +86,8 @@ h2 {
 .badge.badge-primary.badge-pill {
     background-color: #993366;
 }
+
+.is-invalid {
+  border: 1px solid #dc3545 !important;
+  background-color: #fff0f0;
+}

@@ -5,21 +5,74 @@ document.addEventListener('DOMContentLoaded', function () {
     const domandeContainer = document.getElementById('domandeContainer');
     const aggiungiDomandaBtn = document.getElementById('aggiungiDomandaBtn');
 
-    document.querySelectorAll('#quizModal [data-bs-dismiss="modal"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        quizModal.hide();
-      });
-    });
-    
-    let domandaIndex = 0;
+    // Funzione per mostrare messaggi con il modal personalizzato
+    function showMessage(title, message, options = {}) {
+        const modalEl = document.getElementById('erroreMessage');
+        const modalTitle = modalEl.querySelector('#erroreMessageTitle');
+        const modalMessage = modalEl.querySelector('#erroreMessageMessage');
+        const primaryBtn = modalEl.querySelector('#primaryButton');
+        const secondaryBtn = modalEl.querySelector('#secondaryButton');
 
-    const annullaBtn = document.querySelector('#quizModal .btn-secondary');
-    annullaBtn.addEventListener('click', function () {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+
+        // Mostra o nasconde i pulsanti in base a options
+        if (options.primaryText) {
+            primaryBtn.textContent = options.primaryText;
+            primaryBtn.classList.remove('d-none');
+        } else {
+            primaryBtn.classList.add('d-none');
+        }
+
+        if (options.secondaryText) {
+            secondaryBtn.textContent = options.secondaryText;
+            secondaryBtn.classList.remove('d-none');
+        } else {
+            secondaryBtn.classList.add('d-none');
+        }
+
+        // Rimuove eventuali event listener precedenti
+        primaryBtn.onclick = null;
+        secondaryBtn.onclick = null;
+
+        if (options.onPrimaryClick) {
+            primaryBtn.onclick = () => {
+                options.onPrimaryClick();
+                bootstrap.Modal.getInstance(modalEl).hide();
+            };
+        }
+
+        if (options.onSecondaryClick) {
+            secondaryBtn.onclick = () => {
+                options.onSecondaryClick();
+                bootstrap.Modal.getInstance(modalEl).hide();
+            };
+        }
+
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    }
+
+    quizModalEl.addEventListener('hidden.bs.modal', function () {
         form.reset();
         domandeContainer.innerHTML = '';
         domandaIndex = 0;
     });
 
+    document.querySelectorAll('#quizModal [data-bs-dismiss="modal"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            quizModal.hide();
+        });
+    });
+
+    let domandaIndex = 0;
+
+    const resetBtn = document.getElementById('resetFormBtn');
+    resetBtn.addEventListener('click', function () {
+        form.reset();
+        domandeContainer.innerHTML = '';
+        domandaIndex = 0;
+    });
 
     function getCookie(name) {
         let cookieValue = null;
@@ -44,12 +97,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    form.addEventListener('input', function (e) {
+        if (e.target.classList.contains('is-invalid')) {
+            e.target.classList.remove('is-invalid');
+        }
+    });
+
     if (aggiungiDomandaBtn) {
         aggiungiDomandaBtn.addEventListener('click', function () {
             const domandaHTML = `
                 <div class="card mb-3 p-3 border shadow-sm domanda" data-index="${domandaIndex}">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="mb-0">Domanda ${domandaIndex + 1}</label>
+                        <button type="button" class="btn btn-danger btn-sm rimuoviDomandaBtn">Rimuovi domanda</button>
+                    </div>
                     <div class="mb-2">
-                        <label>Domanda ${domandaIndex + 1}</label>
                         <input type="text" class="form-control testoDomanda" required>
                     </div>
                     <div class="risposteContainer mb-2"></div>
@@ -61,8 +123,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Aggiunta risposta dinamica
     domandeContainer.addEventListener('click', function (e) {
+        if (e.target.classList.contains('rimuoviDomandaBtn')) {
+            e.target.closest('.domanda').remove();
+        }
         if (e.target.classList.contains('aggiungiRispostaBtn')) {
             const domandaCard = e.target.closest('.domanda');
             const risposteContainer = domandaCard.querySelector('.risposteContainer');
@@ -89,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function () {
             risposteContainer.insertAdjacentHTML('beforeend', rispostaHTML);
         }
 
-        // Rimozione risposta
         if (e.target.classList.contains('rimuoviRispostaBtn')) {
             e.target.closest('.risposta').remove();
         }
@@ -99,37 +162,101 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const titolo = document.getElementById('titolo').value;
-            const autore = document.getElementById('autore').value;
-            const dataInizio = document.getElementById('data_inizio').value;
-            const dataFine = document.getElementById('data_fine').value;
+            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
 
-            const domande = [];
+            let valid = true;
+
+            const titoloInput = document.getElementById('titolo');
+            const dataInizioInput = document.getElementById('data_inizio');
+            const dataFineInput = document.getElementById('data_fine');
+
+            const titolo = titoloInput.value.trim();
+            const dataInizio = dataInizioInput.value.trim();
+            const dataFine = dataFineInput.value.trim();
+            const autore = 'demo';
+
+            if (!titolo) {
+                titoloInput.classList.add('is-invalid');
+                valid = false;
+            }
+            if (!dataInizio) {
+                dataInizioInput.classList.add('is-invalid');
+                valid = false;
+            }
+            if (!dataFine) {
+                dataFineInput.classList.add('is-invalid');
+                valid = false;
+            }
+
             const blocchiDomanda = document.querySelectorAll('.domanda');
+            const domande = [];
+
+            if (blocchiDomanda.length === 0) {
+                showMessage('Errore', 'Inserisci almeno una domanda.', { primaryText: 'OK' });
+                return;
+            }
 
             blocchiDomanda.forEach((blocco, domandaIndex) => {
-                const testoDomanda = blocco.querySelector('.testoDomanda').value;
-                const risposte = [];
-
+                const testoDomanda = blocco.querySelector('.testoDomanda');
                 const risposteBlocchi = blocco.querySelectorAll('.risposta');
+                const radios = blocco.querySelectorAll(`input.tipoRispostaRadio[name="corretta-${blocco.dataset.index}"]`);
 
-                // Trovo quale radio è selezionata per questa domanda
-                const radios = blocco.querySelectorAll(`input.tipoRispostaRadio[name="corretta-${domandaIndex}"]`);
                 let indiceCorretta = -1;
+
+                if (!testoDomanda.value.trim()) {
+                    testoDomanda.classList.add('is-invalid');
+                    valid = false;
+                }
+
+                if (risposteBlocchi.length < 2) {
+                    showMessage('Errore', `La domanda ${domandaIndex + 1} deve avere almeno 2 risposte.`, { primaryText: 'OK' });
+                    valid = false;
+                }
+
                 radios.forEach((radio, i) => {
                     if (radio.checked) indiceCorretta = i;
                 });
 
+                if (indiceCorretta === -1) {
+                    radios.forEach(radio => radio.classList.add('is-invalid'));
+                    valid = false;
+                }
+
+                const risposte = [];
+
                 risposteBlocchi.forEach((rispostaBlocco, i) => {
-                    const testo = rispostaBlocco.querySelector('.testoRisposta').value;
-                    const punteggio = parseFloat(rispostaBlocco.querySelector('.punteggioRisposta').value) || 0;
+                    const testo = rispostaBlocco.querySelector('.testoRisposta');
+                    const punteggio = rispostaBlocco.querySelector('.punteggioRisposta');
+
+                    if (!testo.value.trim()) {
+                        testo.classList.add('is-invalid');
+                        valid = false;
+                    }
+
+                    if (punteggio.value === '' || isNaN(punteggio.value)) {
+                        punteggio.classList.add('is-invalid');
+                        valid = false;
+                    }
+
                     const tipo = (i === indiceCorretta) ? "corretta" : "sbagliata";
 
-                    risposte.push({ testo, punteggio, tipo });
+                    risposte.push({
+                        testo: testo.value.trim(),
+                        punteggio: parseFloat(punteggio.value),
+                        tipo: tipo
+                    });
                 });
 
-                domande.push({ testo: testoDomanda, opzioni: risposte });
+                domande.push({
+                    testo: testoDomanda.value.trim(),
+                    opzioni: risposte
+                });
             });
+
+            if (!valid) {
+                showMessage('Errore', "Alcuni campi sono incompleti o errati. Correggili e riprova.", { primaryText: 'OK' });
+                return;
+            }
 
             fetch('/api/salva_quiz/', {
                 method: 'POST',
@@ -148,15 +275,14 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert("Quiz salvato con successo!");
-                    location.reload();
+                    showMessage('Successo', "Quiz salvato con successo!", { primaryText: 'OK', onPrimaryClick: () => location.reload() });
                 } else {
-                    alert("Errore nel salvataggio: " + data.errore);
+                    showMessage('Errore', "Errore nel salvataggio: " + data.errore, { primaryText: 'OK' });
                 }
             })
             .catch(error => {
                 console.error("Errore nella richiesta:", error);
-                alert("Errore nella connessione.");
+                showMessage('Errore', "Errore nella connessione.", { primaryText: 'OK' });
             });
 
             quizModal.hide();
