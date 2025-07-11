@@ -207,7 +207,11 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        alert('Quiz salvato con successo!');
+        $("#alertSuccess").text("Il quiz è stato registrato con successo!");
+        $("#alertSuccess").removeClass("d-none");
+                        setTimeout(function () {
+                            window.location.href = "imieiquiz"
+                        }, 2000);
         quizModal.hide();
         // reset form se vuoi
         form.reset();
