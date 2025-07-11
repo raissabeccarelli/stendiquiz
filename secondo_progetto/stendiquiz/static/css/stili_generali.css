@@ -83,11 +83,24 @@ h2 {
     color: #993366;
 }
 
+#domandeContainer {
+    max-height: 365px;
+    overflow-y: scroll;
+}
+
 .badge.badge-primary.badge-pill {
     background-color: #993366;
 }
 
 .is-invalid {
-  border: 1px solid #dc3545 !important;
-  background-color: #fff0f0;
+    border: 1px solid #dc3545 !important;
+    background-color: #fff0f0;
+}
+
+.rimuoviRispostaBtn,
+.rimuoviRispostaBtn:hover,
+.rimuoviRispostaBtn:focus {
+    background-color: #fff;
+    border: none !important;
+    color: #212529;
 }

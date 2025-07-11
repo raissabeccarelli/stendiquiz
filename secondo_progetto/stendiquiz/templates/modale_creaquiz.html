@@ -10,19 +10,24 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="mb-3">
+          <div class="form-group mb-3">
             <label for="titolo" class="form-label">Titolo</label>
-            <input type="text" class="form-control" id="titolo" name="titolo" required>
+            <input type="text" class="form-control" id="titolo" name="titolo" placeholder="Inserisci il titolo del quiz"
+              required>
+            <small id="charCountertitolo" class="form-text text-muted"></small>
+            <div id="invalidFeedbacktitolo" class="invalid-feedback"></div>
           </div>
 
           <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="form-group col-md-6">
               <label for="data_inizio" class="form-label">Data Apertura</label>
-              <input type="date" class="form-control" id="data_inizio" name="data_inizio" required>
+              <input type="text" class="form-control" id="data_inizio" name="data_inizio" required>
+              <div id="invalidFeedbackdata_inizio" class="invalid-feedback"></div>
             </div>
-            <div class="col-md-6">
+            <div class="form-group col-md-6">
               <label for="data_fine" class="form-label">Data Chiusura</label>
-              <input type="date" class="form-control" id="data_fine" name="data_fine" required>
+              <input type="text" class="form-control" id="data_fine" name="data_fine" required>
+              <div id="invalidFeedbacdata_fine" class="invalid-feedback">Prova</div>
             </div>
           </div>
 
@@ -30,14 +35,14 @@
           <h5>Domande</h5>
           <div id="erroreDomande" class="text-danger mb-3"></div>
           <div id="domandeContainer"></div>
-          <button type="button" class="btn btn-outline-primary mt-3" id="aggiungiDomandaBtn">
-            <i class="fa-solid fa-plus"></i>Aggiungi domanda
+          <button type="button" class="btn btn-outline-primary" id="aggiungiDomandaBtn">
+            <i class="fa-solid fa-plus"></i> Aggiungi domanda
           </button>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="resetFormBtn">Resetta</button>
-          <button type="submit" class="btn btn-primary">Salva quiz</button>
+          <button type="button" class="btn btn-secondary" id="resetFormBtn">Reset</button>
+          <button type="submit" class="btn btn-primary">Salva</button>
         </div>
       </form>
     </div>

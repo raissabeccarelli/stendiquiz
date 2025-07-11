@@ -6,7 +6,7 @@ $(document).ready(function () {
         validaTitolo();
     });
 
-    $("#dataInizio, #dataFine").datepicker({
+    $("#dataInizioModifica, #dataFineModifica").datepicker({
         showAnim: 'fadeIn',
         showButtonPanel: true,
         dateFormat: 'dd/mm/yy',
@@ -25,8 +25,8 @@ $(document).ready(function () {
         if (dateValide && titoloValido) {
             var codiceQuiz = $("#quizCodiceDaModificare").text();
             var nomeQuiz = $("#quizTitolo").val();
-            var dataInizioQuiz = $("#dataInizio").val();
-            var dataFineQuiz = $("#dataFine").val();
+            var dataInizioQuiz = $("#dataInizioModifica").val();
+            var dataFineQuiz = $("#dataFineModifica").val();
             var data = { funzione: "modificaQuiz", codice: codiceQuiz, titolo: nomeQuiz, dataInizio: dataInizioQuiz, dataFine: dataFineQuiz };
             $('.contenitore-loader .loader').removeClass('d-none');
             $.getJSON("funzionalitaDB", data,
@@ -55,8 +55,8 @@ $(document).ready(function () {
         var dataInizioQuiz = riga.data()[3];
         var dataFineQuiz = riga.data()[4];
         $('#quizTitolo').val(nomeQuiz).trigger('input');
-        $('#dataInizio').val(dataInizioQuiz);
-        $('#dataFine').val(dataFineQuiz);
+        $('#dataInizioModifica').val(dataInizioQuiz);
+        $('#dataFineModifica').val(dataFineQuiz);
         $("#primaryButton").on("click", eliminaQuiz);
         $("#quizCodiceDaModificare").text(codiceQuiz);
         $('#formModificaQuiz').find('.is-invalid').removeClass('is-invalid');
@@ -95,34 +95,34 @@ function validaTitolo() {
 }
 
 function validaDate() {
-    var dataInizio = $('#dataInizio').datepicker('getDate');
-    var dataFine = $('#dataFine').datepicker('getDate');
+    var dataInizio = $('#dataInizioModifica').datepicker('getDate');
+    var dataFine = $('#dataFineModifica').datepicker('getDate');
 
     if (dataInizio) {
         if (dataFine) {
             if (dataInizio <= dataFine) {
-                $('#dataInizio').addClass('is-valid');
-                $('#dataInizio').removeClass('is-invalid');
-                $('#dataFine').addClass('is-valid');
-                $('#dataFine').removeClass('is-invalid');
+                $('#dataInizioModifica').addClass('is-valid');
+                $('#dataInizioModifica').removeClass('is-invalid');
+                $('#dataFineModifica').addClass('is-valid');
+                $('#dataFineModifica').removeClass('is-invalid');
                 return true;
             }
             else {
-                $("#invalidFeedbackDataFine").text("La data di chiusura non può essere precedente alla data di apertura!")
-                $('#dataFine').addClass('is-invalid');
-                $('#dataFine').removeClass('is-valid');
+                $("#invalidFeedbackDataFineModifica").text("La data di chiusura non può essere precedente alla data di apertura!")
+                $('#dataFineModifica').addClass('is-invalid');
+                $('#dataFineModifica').removeClass('is-valid');
             }
         }
         else {
-            $("#invalidFeedbackDataFine").text("Data di chiusura obbligatoria!")
-            $('#dataFine').addClass('is-invalid');
-            $('#dataFine').removeClass('is-valid');
+            $("#invalidFeedbackDataFineModifica").text("Data di chiusura obbligatoria!")
+            $('#dataFineModifica').addClass('is-invalid');
+            $('#dataFineModifica').removeClass('is-valid');
         }
     }
     else {
-        $("#invalidFeedbackDataInizio").text("Data di apertura obbligatoria!")
-        $('#dataInizio').addClass('is-invalid');
-        $('#dataInizio').removeClass('is-valid');
+        $("#invalidFeedbackDataInizioModifica").text("Data di apertura obbligatoria!")
+        $('#dataInizioModifica').addClass('is-invalid');
+        $('#dataInizioModifica').removeClass('is-valid');
     }
     return false;
 }

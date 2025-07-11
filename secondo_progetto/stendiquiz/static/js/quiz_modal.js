@@ -1,3 +1,5 @@
+var domandaIndex = 0;
+
 document.addEventListener('DOMContentLoaded', function () {
   const quizModalEl = document.getElementById('quizModal');
   const quizModal = new bootstrap.Modal(quizModalEl);
@@ -7,9 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const resetBtn = document.getElementById('resetFormBtn');
   const erroreDomande = document.getElementById('erroreDomande');
 
-  let domandaIndex = 0;
-
-  // Apri modale al click su link o bottone con id openModalLink
   document.addEventListener('click', function (e) {
     if (e.target.closest('#openModalLink')) {
       e.preventDefault();
@@ -17,45 +16,41 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Reset form e contenuto domande
   resetBtn.addEventListener('click', function () {
-    form.reset();
-    domandeContainer.innerHTML = '';
-    erroreDomande.textContent = '';
-    domandaIndex = 0;
+    resetForm();
   });
 
-  // Rimuove classe invalid mentre l’utente scrive
-  form.addEventListener('input', function (e) {
-    if (e.target.classList.contains('is-invalid')) {
-      e.target.classList.remove('is-invalid');
-    }
-  });
-
-  // Aggiungi una nuova domanda
   aggiungiDomandaBtn.addEventListener('click', function () {
     const domandaHTML = `
       <div class="card mb-3 p-3 border shadow-sm domanda" data-index="${domandaIndex}">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <label class="mb-0">Domanda ${domandaIndex + 1}</label>
-          <button type="button" class="btn btn-danger btn-sm rimuoviDomandaBtn">Rimuovi domanda</button>
+          <button type="button" class="btn btn-danger btn-sm rimuoviDomandaBtn">Elimina</button>
         </div>
         <div class="mb-2">
-          <input type="text" class="form-control testoDomanda" required>
-          <div class="invalid-feedback">Inserisci il testo della domanda.</div>
+          <input type="text" class="form-control testoDomanda" id="Domanda${domandaIndex + 1}" required>
+          <small id="charCounterDomanda${domandaIndex + 1}" class="form-text text-muted"></small>
+          <div id="invalidFeedbackDomanda${domandaIndex + 1}" class="invalid-feedback"></div>
         </div>
         <div class="risposteContainer mb-2"></div>
         <div class="errorRisposte text-danger mb-2"></div>
-        <button type="button" class="btn btn-sm btn-outline-secondary aggiungiRispostaBtn">+ Aggiungi risposta</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary aggiungiRispostaBtn"><i class="fa-solid fa-plus"></i> Aggiungi domanda</button>
       </div>
     `;
     domandeContainer.insertAdjacentHTML('beforeend', domandaHTML);
+    $('.testoDomanda').on('input', function () {
+      var id = $(this).attr("id");
+      var lunghezza = $(this).val().length;
+      $('#charCounter' + id).text(lunghezza + ' / 80 caratteri');
+      validaCampoTesto($(this), "La lunghezza massima per il testo della domanda è 80 caratteri", "Il testo della domanda è obbligatorio!", 80, $('#charCounter' + id), $('#invalidFeedback' + id));
+    });
     domandaIndex++;
   });
 
   // Gestione click rimuovi domande, aggiungi risposte e rimuovi risposte
   domandeContainer.addEventListener('click', function (e) {
     if (e.target.classList.contains('rimuoviDomandaBtn')) {
+      domandaIndex--;
       e.target.closest('.domanda').remove();
     }
 
@@ -79,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <label class="ms-2 mb-0">Corretta</label>
           </div>
           <div class="col-md-1">
-            <button type="button" class="btn btn-danger btn-sm rimuoviRispostaBtn">&times;</button>
+            <button type="button" class="btn btn-outline-secondary shadow-none rimuoviRispostaBtn" data-toggle="tooltip" data-placement="bottom" title="Elimina Risposta"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>
       `;
@@ -91,11 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Submit form con validazione
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-
-    // Reset errori
     form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
     erroreDomande.textContent = '';
 
@@ -172,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
           valid = false;
         }
 
-        const tipo = (i === indiceCorretta) ? "corretta" : "sbagliata";
+        const tipo = (i === indiceCorretta) ? "Corretta" : "Sbagliata";
 
         risposte.push({
           testo: testo.value.trim(),
@@ -204,26 +196,20 @@ document.addEventListener('DOMContentLoaded', function () {
         domande: domande
       })
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        $("#alertSuccess").text("Il quiz è stato registrato con successo!");
-        $("#alertSuccess").removeClass("d-none");
-                        setTimeout(function () {
-                            window.location.href = "imieiquiz"
-                        }, 2000);
-        quizModal.hide();
-        // reset form se vuoi
-        form.reset();
-        domandeContainer.innerHTML = '';
-        erroreDomande.textContent = '';
-        domandaIndex = 0;
-      } else {
-        alert('Errore nel salvataggio: ' + (data.errore || 'Errore sconosciuto'));
-      }
-    })
-    .catch(() => alert('Errore di connessione.'));
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          $("#alertSuccess").text("Il quiz è stato registrato con successo! La pagina si ricaricherà tra qualche secondo!");
+          $("#alertSuccess").removeClass("d-none");
+          setTimeout(function () {
+            window.location.href = "imieiquiz"
+          }, 2000);
 
+        } else {
+          window.location.href = "errore?title=" + encodeURIComponent("502 Internal Server Error") + "&message=" + encodeURIComponent("Si è verificato un errore durante la registrazione del quiz. Riprovare più tardi");
+        }
+      })
+      .catch(() => window.location.href = "errore?title=" + encodeURIComponent("502 Internal Server Error") + "&message=" + encodeURIComponent("Si è verificato un errore durante la registrazione del quiz. Riprovare più tardi"));
   });
 
   // Funzione per prendere il cookie CSRF (per Django)
@@ -242,3 +228,99 @@ document.addEventListener('DOMContentLoaded', function () {
     return cookieValue;
   }
 });
+
+function validaCampoTesto(selettore, messaggioErrore, messaggioObbligatorio, lunghezzaMassima, charCounter, invalidFeedback) {
+  if (selettore.val().length > 0) {
+    if (selettore.val().length <= lunghezzaMassima) {
+      selettore.removeClass('is-invalid');
+      selettore.addClass('is-valid');
+      charCounter.removeClass('d-none');
+      return true;
+    }
+    else {
+      invalidFeedback.text(messaggioErrore);
+      charCounter.addClass('d-none');
+      selettore.removeClass('is-valid');
+      selettore.addClass('is-invalid');
+      selettore.removeClass('is-valid');
+    }
+  }
+  else {
+    invalidFeedback.text(messaggioObbligatorio);
+    charCounter.addClass('d-none');
+    selettore.removeClass('is-valid');
+    selettore.addClass('is-invalid');
+  }
+  return false;
+}
+
+function validaDateCreaQuiz() {
+  var dataInizio = $('#data_inizio').datepicker('getDate');
+  var dataFine = $('#data_fine').datepicker('getDate');
+
+  if (dataInizio) {
+    if (dataFine) {
+      if (dataInizio <= dataFine) {
+        $('#data_inizio').addClass('is-valid');
+        $('#data_inizio').removeClass('is-invalid');
+        $('#data_fine').addClass('is-valid');
+        $('#data_fine').removeClass('is-invalid');
+        return true;
+      }
+      else {
+        $("#invalidFeedbackdata_inizio").text("La data di chiusura non può essere precedente alla data di apertura!")
+        $('#data_fine').addClass('is-invalid');
+        $('#data_fine').removeClass('is-valid');
+      }
+    }
+    else {
+      $("#invalidFeedbackdata_fine").text("Data di chiusura obbligatoria!")
+      $('#data_fine').addClass('is-invalid');
+      $('#data_fine').removeClass('is-valid');
+    }
+  }
+  else {
+    $("#invalidFeedbackdata_inizio").text("Data di apertura obbligatoria!")
+    $('#data_inizio').addClass('is-invalid');
+    $('#data_inizio').removeClass('is-valid');
+  }
+  return false;
+}
+
+$(document).ready(function () {
+
+  $("#data_inizio, #data_fine").datepicker({
+    showAnim: 'fadeIn',
+    showButtonPanel: true,
+    dateFormat: 'dd/mm/yy',
+    onClose: function () {
+      validaDateCreaQuiz();
+    }
+  });
+
+  $('#quizModal').on('shown.bs.modal', function () {
+    resetForm();
+  });
+
+  $.datepicker.setDefaults($.datepicker.regional['it']);
+
+  $('#titolo').on('input', function () {
+    var lunghezza = $(this).val().length;
+    $('#charCountertitolo').text(lunghezza + ' / 80 caratteri');
+    validaCampoTesto($('#titolo'), "La lunghezza massima per il titolo del quiz è 80 caratteri", "Il titolo del quiz è obbligatorio!", 80, $('#charCountertitolo'), $('invalidFeedbacktitolo'));
+  });
+});
+
+function resetForm() {
+  domandaIndex = 0;
+  $('#domandeContainer').html("");
+  $('#domandeContainer').empty();
+  $('#quizForm').find('.is-invalid').removeClass('is-invalid');
+  $('#quizForm').find('.is-valid').removeClass('is-valid');
+  $("#data_inizio, #data_fine").datepicker("setDate", new Date());
+  validaDateCreaQuiz();
+  $('#charCountertitolo').addClass('d-none');
+  $('#titolo').val('');
+  $('#titolo').focus();
+}
+

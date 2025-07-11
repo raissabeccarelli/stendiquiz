@@ -252,7 +252,6 @@ def funzionalitaDB(request):
         esito = aggiungiRispostaPartecipazione(
             partecipazione, codiceQuiz, domanda, risposta)
 
-        # ? Non esiste la partecipazione
         if esito == 1:
             errore = {"errore": "La partecipazione '{}' non esiste nel DB".format(
                 partecipazione), "codiceErrore": 2}
@@ -353,7 +352,7 @@ def salvaQuizNelDB(payload):
 
         for j, risposta in enumerate(domanda["opzioni"], start=1):
             testo_risposta = escape(risposta["testo"])
-            punteggio = int(risposta.get("punteggio", 0))  
+            punteggio = int(risposta.get("punteggio", 0))
             tipo = risposta.get("tipo", "sbagliata").capitalize()
 
             query_risposta = f"""
