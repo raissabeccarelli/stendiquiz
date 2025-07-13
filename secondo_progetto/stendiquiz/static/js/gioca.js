@@ -20,7 +20,7 @@ $(document).ready(function () {
                     codicePartecipazione = risultatoAjax;
                     registraRisposte(codicePartecipazione, quizCodice, function (risultatoAjax) {
                         if (risultatoAjax && "esito" in risultatoAjax) {
-                            $("#alertSuccess").text("La partecipazione è stata registrata con successo! La pagina si ricaricherà tra qualche secondo.");
+                            $("#alertSuccess").text("La partecipazione è stata registrata con successo! Scoprirai i tuoi risultati tra qualche secondo!.");
                             $("#alertSuccess").removeClass("d-none");
                             setTimeout(function () {
                                 window.location.href = "visualizzapartecipazione?codice=" + codicePartecipazione;

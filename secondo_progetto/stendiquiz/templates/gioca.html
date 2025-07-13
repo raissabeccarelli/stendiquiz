@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	{% include "commons/import_comuni.html" %}
 	{% load static %}
-	<link rel="stylesheet" src="{% static 'css/errore.css'}" />
+	<link rel="stylesheet" href="{% static 'css/errore.css' %}" />
 	<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
 	<script src="{% static 'js/sidebar.js' %}"></script>
 	<script src="{% static 'js/utilities.js' %}"></script>
@@ -55,6 +55,35 @@
 							</div>
 						</div>
 						{% else %}
+						<div class="container-fluid mb-5">
+							<div class="row shadow-sm text-center">
+
+								<div class="col-md p-3 border">
+									<i class="fa-solid fa-user d-block mb-2 icona-risposta"></i>
+									<strong class="d-block titolo-info">Creatore</strong>
+									<div><a class = "creatore" href="/statistiche?nomeUtente={{creatore}}">{{creatore}}</a></div>
+								</div>
+
+								<div class="col-md p-3 border">
+									<i class="fa-solid fa-calendar d-block mb-2 icona-risposta"></i>
+									<strong class="d-block titolo-info">Data Apertura</strong>
+									<div>{{dataInizio}}</div>
+								</div>
+
+								<div class="col-md p-3 border">
+									<i class="fa-solid fa-calendar d-block mb-2 icona-risposta"></i>
+									<strong class="d-block titolo-info">Data Chiusura</strong>
+									<div>{{dataFine}}</div>
+								</div>
+
+								<div class="col-md p-3 border">
+									<i class="fa-solid fa-hashtag d-block mb-2 icona-risposta"></i>
+									<strong class="d-block titolo-info">Numero Domande</strong>
+									<div>{{nDomande}}</div>
+								</div>
+
+							</div>
+						</div>
 						{% for domanda in domande %}
 						<form class="formGioca" numeroDomanda="{{forloop.counter}}">
 							<div class="card mb-4 shadow-sm form-group domanda-card">

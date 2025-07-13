@@ -20,12 +20,6 @@ giocaTemplateName = "gioca.html"
 erroreTemplateName = "errore.html"
 visualizzaPartecipazioneTemplateName = "visualizzaPartecipazione.html"
 
-OPEN_QUIZ = "reindirizzaQUIZ(this)"
-OPEN_UTENTE = "reindirizzaUTENTE(this)"
-OPEN_PARTECIPAZIONE = "reindirizzaPARTECIPAZIONI(this)"
-OPEN_INFO_QUIZ = "reindirizzaINFO_QUIZ(this)"
-OPEN_CREA_QUIZ = "openCreaQuiz(this)"
-
 SUPER_USER = "demo"
 
 
@@ -94,7 +88,7 @@ def gioca(request):
     parametri = estrazioneQueryString(request)
     if trovaParametri(parametri, ["codice"]) != "ok" or not server.esisteQuiz(parametri["codice"]):
         params = {'title': '502 Bad Server',
-                  'message': 'Non è possibile recuperare le domande del quiz selezionato. Riprova più tardi.'}
+                  'message': 'Non è possibile recuperare le domande del quiz selezionato. Il quiz non esiste.'}
         query_string = urlencode(params)
         base_url = reverse('errore')
         url_con_parametri = f'{base_url}?{query_string}'
@@ -139,7 +133,8 @@ def gioca(request):
                     "dataInizio": utilities.DataFormatoView(quiz["dataInizio"]),
                     "dataFine": utilities.DataFormatoView(quiz["dataFine"]),
                     "titolo": quiz["titolo"],
-                    "domande": domande
+                    "domande": domande,
+                    "nDomande": len(domande)
                     }
 
     context = infoQuiz
@@ -152,13 +147,6 @@ def gioca(request):
     res.write(page)
 
     return res
-
-
-def error_page(request, title, message):
-    context = {}
-    context["title"] = title
-    context["message"] = message
-    return render(request, 'errore.html', context)
 
 
 def imieiquiz(request):
@@ -281,8 +269,75 @@ def salva_quiz_api(request):
 
 def visualizzapartecipazione(request):
     res = HttpResponse(content_type="text/html")
+    parametri = estrazioneQueryString(request)
+    if trovaParametri(parametri, ["codice"]) != "ok" or not server.esistePartecipazione(parametri["codice"]):
+        params = {'title': '502 Bad Server',
+                  'message': 'Non è possibile recuperare la partecipazione al quiz selezionata. La partecipazione non esiste.'}
+        query_string = urlencode(params)
+        base_url = reverse('errore')
+        url_con_parametri = f'{base_url}?{query_string}'
+        return redirect(url_con_parametri)
+
     context = {}
+
+    partecipazione = server.getPartecipazione(
+        parametri={"codice": parametri["codice"]})
+
+    partecipazione = partecipazione[0]
+    domandeDB = server.getDomandeQuiz(partecipazione["codiceQuiz"])
+
+    domande = []
+
+    for domanda in domandeDB:
+        risposteDB = server.getRisposteDomandaQuiz(
+            codiceQuiz=partecipazione["codiceQuiz"], numeroDomanda=domanda["numero"])
+        random.shuffle(risposteDB)
+        rispostaUtente = server.getRisposteUtenteDomandaQuiz(
+            numeroPartecipazione=parametri["codice"], numeroDomanda=domanda["numero"])
+        rispostaUtente = rispostaUtente[0]
+        risposte = []
+        domandaPunteggio = 2
+        domandaCorretta = False
+
+        for risposta in risposteDB:
+            o_r = {}
+            o_r["testo"] = risposta["testo"]
+            o_r["corretta"] = risposta["tipo"] == "Corretta"
+            o_r["numero"] = risposta["numero"]
+            o_r["rispostautente"] = rispostaUtente["codicerisposta"]
+            if o_r["corretta"]:
+                domandaPunteggio = risposta["punteggio"]
+                if (o_r["rispostautente"] == o_r["numero"]):
+                    domandaCorretta = True
+
+            risposte.append(o_r)
+
+        o_d = {}
+        o_d["testo"] = domanda["testo"]
+        o_d["numero"] = domanda["numero"]
+        o_d["punteggio"] = domandaPunteggio
+        o_d["domandacorretta"] = domandaCorretta
+        o_d["risposte"] = risposte
+
+        domande.append(o_d)
+        infoQuiz = {"codiceQuiz": partecipazione["codiceQuiz"],
+                    "punteggioMassimo": partecipazione["punteggioMassimo"],
+                    "punteggioOttenuto": partecipazione["punteggioOttenuto"],
+                    "percentuale": round((int(partecipazione["punteggioOttenuto"]) / int(partecipazione["punteggioMassimo"])) * 100),
+                    "dataPartecipazione": utilities.DataFormatoView(partecipazione["data"]),
+                    "titolo": partecipazione["quiz"],
+                    "numeroDomande": len(domande),
+                    "domande": domande
+                    }
+
+    print(infoQuiz)
+    context = infoQuiz
+    context["infoPagina"] = {"page": "Risultati", "root": [
+        {"pagina": "Stendiquiz", "link": "./"}, {"pagina": "Gioca", "link": "./"}]}
+
     template = loader.get_template(visualizzaPartecipazioneTemplateName)
     page = template.render(context=context, request=request)
+
     res.write(page)
+
     return res

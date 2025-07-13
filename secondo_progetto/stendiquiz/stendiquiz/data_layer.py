@@ -129,6 +129,13 @@ def getDomandeQuiz(codice):
     return risultati
 
 
+def getRisposteUtenteDomandaQuiz(numeroPartecipazione, numeroDomanda):
+    query = "SELECT CODICERISPOSTA AS codicerisposta FROM RispostaUtenteQuiz WHERE PARTECIPAZIONE = {} AND CODICEDOMANDA = {}".format(
+        numeroPartecipazione, numeroDomanda)
+    risultati = eseguiQuery(query)
+    return risultati
+
+
 def getRisposteDomandaQuiz(codiceQuiz, numeroDomanda):
     query = "SELECT NUMERO AS numero ,TESTO AS testo, TIPORISPOSTA AS tipo , PUNTEGGIO AS punteggio FROM Risposte WHERE QUIZCODICE = {} AND DOMANDA = {} ORDER BY NUMERO ASC".format(
         codiceQuiz, numeroDomanda)

@@ -10,6 +10,10 @@ table thead,
     color: #fff;
 }
 
+#tabellaQuiz td {
+    cursor: pointer;
+}
+
 .btn.btn-primary {
     background-color: #993366;
     border-color: #993366;
@@ -38,13 +42,9 @@ table thead,
     background-color: #ececec;
 }
 
-.breadcrumb a {
+.breadcrumb a,
+.creatore {
     color: #212529 !important;
-    text-decoration: none;
-}
-
-#tabellaQuiz td {
-    cursor: pointer;
 }
 
 a,
@@ -88,13 +88,8 @@ h2 {
     overflow-y: scroll;
 }
 
-.badge.badge-primary.badge-pill {
+.badge.badge-primary {
     background-color: #993366;
-}
-
-.is-invalid {
-    border: 1px solid #dc3545 !important;
-    background-color: #fff0f0;
 }
 
 .rimuoviRispostaBtn,
@@ -104,4 +99,21 @@ h2 {
     border: none !important;
     color: #212529;
     padding-top: 0px;
+}
+
+.risposta-corretta,
+.risposta-corretta:hover {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.risposta-sbagliata,
+.risposta-sbagliata:hover {
+    color: #721c24;
+    background-color: #f8d7da;
+}
+
+.titolo-info,
+.icona-risposta {
+    color: #993366;
 }
