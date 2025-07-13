@@ -330,10 +330,14 @@ def salvaQuizNelDB(payload):
     dataFine = escape(payload["data_fine"])
     domande = payload["domande"]
 
+    dataInizio = utilities.DataFormatoDataBase(dataInizio)
+    dataFine = utilities.DataFormatoDataBase(dataFine)
+
     query_quiz = f"""
         INSERT INTO Quiz (TITOLO, CREATORE, DATAINIZIO, DATAFINE)
         VALUES ('{titolo}', '{autore}', '{dataInizio}', '{dataFine}')
     """
+
     eseguiQuery(query_quiz)
 
     query_get_codice = "SELECT MAX(CODICE) as codice FROM Quiz"

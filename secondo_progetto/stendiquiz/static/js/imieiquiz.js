@@ -96,9 +96,8 @@ function caricaMieiQuiz(data) {
         $("#primaryButton").addClass("btn-danger");
         $("#yesNoMessageTitle").text("Conferma eliminazione");
         $("#yesNoMessageMessage").text("Sei sicuro di voler eliminare il quiz \"" + nomeQuiz + "\"? Questa azione non può essere annullata.");
-        if (!($("#primaryButton").text().includes("Elimina"))) {
-            $("#primaryButton").append("Elimina");
-        }
+        $("#primaryButton").text('Elimina');
+        $("#primaryButton").off("click");
         $("#primaryButton").on("click", eliminaQuiz);
         $("#quizCodice").text(codiceQuiz);
         $("#yesNoMessage").modal('show');

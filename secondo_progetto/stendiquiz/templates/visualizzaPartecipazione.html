@@ -8,6 +8,10 @@
     {% include "commons/import_comuni.html" %}
     {% load static %}
     <link rel="stylesheet" src="{% static 'css/errore.css'}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <script src="{% static 'js/sidebar.js' %}"></script>
+    <script src="{% static 'js/utilities.js' %}"></script>
+    <script src="{% static 'js/modal_crea_quiz.js' %}"></script>
     <script src="{% static 'js/gioca.js' %}"></script>
 </head>
 
@@ -17,8 +21,8 @@
     <!--Alert Partecipazione-->
     <div id="alertSuccess" class="alert alert-success fade show fixed-top d-none" role="alert"></div>
     <div class="wrapper d-flex align-items-stretch">
-        <!--Modale creazione-->
-        {% include 'modale_creaquiz.html' %}
+        <!--Modale Crea Quiz-->
+        {% include "commons/modale_creaquiz.html" %}
         <!--Sidebar-->
         <nav id="sidebar" data-include="sidebar"></nav>
         <!-- Page Content  -->

@@ -84,7 +84,7 @@ h2 {
 }
 
 #domandeContainer {
-    max-height: 365px;
+    max-height: 26rem;
     overflow-y: scroll;
 }
 
@@ -103,4 +103,5 @@ h2 {
     background-color: #fff;
     border: none !important;
     color: #212529;
+    padding-top: 0px;
 }

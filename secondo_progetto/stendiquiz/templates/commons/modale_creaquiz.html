@@ -5,7 +5,7 @@
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         <div class="modal-header">
           <h5 class="modal-title" id="quizModalLabel">Crea Quiz</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" data-dismiss="modal" class="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -27,16 +27,16 @@
             <div class="form-group col-md-6">
               <label for="data_fine" class="form-label">Data Chiusura</label>
               <input type="text" class="form-control" id="data_fine" name="data_fine" required>
-              <div id="invalidFeedbacdata_fine" class="invalid-feedback">Prova</div>
+              <div id="invalidFeedbackdata_fine" class="invalid-feedback"></div>
             </div>
           </div>
 
           <hr>
-          <h5>Domande</h5>
-          <div id="erroreDomande" class="text-danger mb-3"></div>
+          <h5>Domande &amp; Risposte</h5>
           <div id="domandeContainer"></div>
+          <div id="erroreDomande" class="alert alert-danger d-none" role="alert"></div>
           <button type="button" class="btn btn-outline-primary" id="aggiungiDomandaBtn">
-            <i class="fa-solid fa-plus"></i> Aggiungi domanda
+            <i class="fa-solid fa-plus"></i> Aggiungi Domanda
           </button>
         </div>
 

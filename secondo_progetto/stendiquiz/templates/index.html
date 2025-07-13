@@ -7,6 +7,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	{% include "commons/import_comuni.html" %}
 	{% load static %}
+	<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+	<script src="{% static 'js/sidebar.js' %}"></script>
+	<script src="{% static 'js/utilities.js' %}"></script>
+	<script src="{% static 'js/modal_crea_quiz.js' %}"></script>
 	<script src="{% static 'js/index.js' %}"></script>
 </head>
 
@@ -20,8 +24,8 @@
 	<div class="wrapper d-flex align-items-stretch">
 		<!--Sidebar-->
 		<nav id="sidebar" data-include="sidebar"></nav>
-		<!--Modale creazione-->
-		{% include 'modale_creaquiz.html' %}
+		<!--Modale Crea Quiz-->
+		{% include "commons/modale_creaquiz.html" %}
 		<!-- Page Content  -->
 		<div id="content" class="p-4 p-md-5 pt-5 d-flex flex-row justify-content-center align-items-center">
 			<div class="container-fluid">
