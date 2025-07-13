@@ -53,12 +53,12 @@ function caricaQuiz(data) {
             { targets: [4, 5], type: 'date', render: DataTable.render.date(), searchable: false },
             {
                 type: 'string', targets: [1], searchPanes: {
-                    orderable: false, 
+                    orderable: false,
                     dtOpts: {
-                        paging: true,          
+                        paging: true,
                         pagingType: 'numbers',
-                        //pageLength: 5,         // Mostra 5 voci per pagina
-                        //searching: false       // Disabilita la barra di ricerca interna al pannello
+                        pageLength: 5,
+                        searching: false
                     }
                 }
             },
@@ -66,7 +66,7 @@ function caricaQuiz(data) {
             { targets: 6, type: 'html', searchPanes: { orderable: false } },
             ],
             responsive: true,
-            lengthMenu: [10, 25, 50, -1],
+            lengthMenu: [10, 25, 50],
             language: {
                 searchPanes: {
                     clearMessage: 'Reset',
@@ -75,10 +75,12 @@ function caricaQuiz(data) {
                 url: '../static/datatables/it-IT.json',
             },
             layout: {
-                topStart: {
-                    buttons: ['searchPanes']
-                }
-            }
+                topStart: ['buttons', 'pageLength']
+            },
+
+            buttons: [
+                'searchPanes'
+            ]
         });
 
     table.on('select.dt', () => {

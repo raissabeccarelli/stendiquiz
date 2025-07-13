@@ -22,10 +22,12 @@ statisticheTemplateName = "statistiche.html"
 
 SUPER_USER = "demo"
 
+
 def estrazioneQueryString(request):
     parametri = request.GET
     parametri = {k: v[0] if len(v) == 1 else v for k, v in parametri.lists()}
     return parametri
+
 
 def index(request):
     res = HttpResponse(content_type="text/html")

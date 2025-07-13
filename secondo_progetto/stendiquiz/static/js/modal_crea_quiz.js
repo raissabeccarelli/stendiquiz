@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const domandaIdx = domandaCard.getAttribute('data-index');
       $('.erroreRisposte').addClass('d-none');
       $('#erroreDomande').addClass('d-none');
-      const rispostaIdx = $('.numeroRisposta' + parseInt(domandaIdx + 1)).length;
+      const rispostaIdx = $('.numeroRisposta' + (parseInt(domandaIdx) + 1)).length;
       if (rispostaIdx == 0) {
         risposteContainer.insertAdjacentHTML('beforeend', '<hr>');
       }
@@ -78,9 +78,9 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
         <div class="row align-items-start mb-2 risposta">
           <div class="col-md-7">
-              <input id="Risposta${rispostaIdx + 1}"type="text" class="form-control testoRisposta" placeholder="Inserisci il testo della risposta" required>
-              <small id="charCounterRisposta${rispostaIdx + 1}" class="form-text text-muted"></small>
-              <div id="invalidFeedbackRisposta${rispostaIdx + 1}" class="invalid-feedback"></div>
+              <input id="Risposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}"type="text" class="form-control testoRisposta" placeholder="Inserisci il testo della risposta" required>
+              <small id="charCounterRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" class="form-text text-muted"></small>
+              <div id="invalidFeedbackRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" class="invalid-feedback"></div>
           </div>
           <div class="col-md-2">
             <input id="PunteggioRisposta${rispostaIdx + 1}" type="number" class="form-control punteggioRisposta" placeholder="Pt." min = "0" required>
@@ -200,13 +200,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const risposte = [];
 
+        var l = 0;
         risposteBlocchi.forEach((rispostaBlocco, i) => {
           const testo = rispostaBlocco.querySelector('.testoRisposta');
           var punteggio = rispostaBlocco.querySelector('.punteggioRisposta');
           var k = 0;
+
           $('.testoRisposta').each(function () {
-            if (!validaCampoTesto($('#Risposta' + (k + 1)), "La lunghezza massima per il testo della risposta è 40 caratteri", "Il testo della risposta è obbligatorio!", 40, $('#charCounterRisposta' + (k + 1)), $('#invalidFeedbackRisposta' + (k + 1)))) {
-              valid = false;
+            if ($('#Risposta' + (l + 1) + '\\.' + (k + 1)).length) {
+              if (!validaCampoTesto($('#Risposta' + (l + 1) + '\\.' + (k + 1)), "La lunghezza massima per il testo della risposta è 40 caratteri", "Il testo della risposta è obbligatorio!", 40, $('#charCounterRisposta' + (l + 1) + '\\.' + (k + 1)), $('#invalidFeedbackRisposta' + (l + 1) + '\\.' + (k + 1)))) {
+                valid = false;
+              }
             }
             k++;
           });
@@ -216,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
             $('invalidFeedbackPunteggioRisposta' + (i + 1)).text("Il punteggio deve essere un numero!");
             valid = false;
           }
+
           if (punteggio.value === '') {
             punteggio.value = 0;
           }
@@ -227,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
             punteggio: punteggio.value.toString(),
             tipo: tipo
           });
+          l++;
         });
 
         domande.push({
@@ -247,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
       data_fine: dataFineInput.value.trim(),
       domande: domande
     });
+
     alert(body);
 
     fetch('/api/salva_quiz/', {

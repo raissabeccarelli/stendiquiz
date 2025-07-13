@@ -61,10 +61,12 @@ function caricaMieiQuiz(data) {
                 url: '../static/datatables/it-IT.json',
             },
             layout: {
-                topStart: {
-                    buttons: ['searchPanes']
-                }
-            }
+                topStart: ['buttons', 'pageLength']
+            },
+
+            buttons: [
+                'searchPanes'
+            ]
         });
 
     $('#tabellaQuiz tbody').on('click', 'tr', function (event) {

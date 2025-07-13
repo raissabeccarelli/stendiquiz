@@ -1,5 +1,5 @@
 {
-    "infoFiltered": "(filtrati da _MAX_ elementi totali)",
+    "infoFiltered": "(filtrati da _MAX_ quiz totali)",
     "infoThousands": ".",
     "loadingRecords": "Caricamento...",
     "processing": "Elaborazione...",
@@ -48,9 +48,9 @@
         "updateState": "Aggiorna"
     },
     "emptyTable": "Nessun dato disponibile nella tabella",
-    "info": "Risultati da _START_ a _END_ di _TOTAL_ elementi",
-    "infoEmpty": "Risultati da 0 a 0 di 0 elementi",
-    "lengthMenu": "Mostra _MENU_ elementi",
+    "info": "Risultati da _START_ a _END_ di _TOTAL_ quiz",
+    "infoEmpty": "Risultati da 0 a 0 di 0 quiz",
+    "lengthMenu": "Mostra _MENU_ quiz",
     "searchBuilder": {
         "add": "Aggiungi Condizione",
         "button": {
