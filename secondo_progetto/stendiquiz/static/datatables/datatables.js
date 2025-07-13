@@ -7493,20 +7493,20 @@
 	 *
 	 * @return {integer} Current page index (zero based)
 	 *//**
-	* Set the current page.
-	*
-	* Note that if you attempt to show a page which does not exist, DataTables will
-	* not throw an error, but rather reset the paging.
-	*
-	* @param {integer|string} action The paging action to take. This can be one of:
-	*  * `integer` - The page index to jump to
-	*  * `string` - An action to take:
-	*    * `first` - Jump to first page.
-	*    * `next` - Jump to the next page
-	*    * `previous` - Jump to previous page
-	*    * `last` - Jump to the last page.
-	* @returns {DataTables.Api} this
-	*/
+   * Set the current page.
+   *
+   * Note that if you attempt to show a page which does not exist, DataTables will
+   * not throw an error, but rather reset the paging.
+   *
+   * @param {integer|string} action The paging action to take. This can be one of:
+   *  * `integer` - The page index to jump to
+   *  * `string` - An action to take:
+   *    * `first` - Jump to first page.
+   *    * `next` - Jump to the next page
+   *    * `previous` - Jump to previous page
+   *    * `last` - Jump to the last page.
+   * @returns {DataTables.Api} this
+   */
 	_api_register('page()', function (action) {
 		if (action === undefined) {
 			return this.page.info().page; // not an expensive call
@@ -7568,11 +7568,11 @@
 	 * @return {integer} Current page length. Note `-1` indicates that all records
 	 *   are to be shown.
 	 *//**
-	* Set the current page length.
-	*
-	* @param {integer} Page length to set. Use `-1` to show all records.
-	* @returns {DataTables.Api} this
-	*/
+   * Set the current page length.
+   *
+   * @param {integer} Page length to set. Use `-1` to show all records.
+   * @returns {DataTables.Api} this
+   */
 	_api_register('page.len()', function (len) {
 		// Note that we can't call this function 'length()' because `length`
 		// is a Javascript property of functions which defines how many arguments
@@ -7684,12 +7684,12 @@
 	 *
 	 * @return {string} Current Ajax source URL
 	 *//**
-	* Set the Ajax URL. Note that this will set the URL for all tables in the
-	* current context.
-	*
-	* @param {string} url URL to set.
-	* @returns {DataTables.Api} this
-	*/
+   * Set the Ajax URL. Note that this will set the URL for all tables in the
+   * current context.
+   *
+   * @param {string} url URL to set.
+   * @returns {DataTables.Api} this
+   */
 	_api_register('ajax.url()', function (url) {
 		var ctx = this.context;
 
@@ -9235,12 +9235,12 @@
 	 *   direction of the sort (`desc` or `asc`) and, optionally, the third is the
 	 *   index of the sorting order from the `column.sorting` initialisation array.
 	 *//**
-	* Set the ordering for the table.
-	*
-	* @param {integer} order Column index to sort upon.
-	* @param {string} direction Direction of the sort to be applied (`asc` or `desc`)
-	* @returns {DataTables.Api} this
-	*//**
+   * Set the ordering for the table.
+   *
+   * @param {integer} order Column index to sort upon.
+   * @param {string} direction Direction of the sort to be applied (`asc` or `desc`)
+   * @returns {DataTables.Api} this
+   *//**
 	* Set the ordering for the table.
 	*
 	* @param {array} order 1D array of sorting information to be applied.
@@ -14177,11 +14177,11 @@
 		 * @param  {int|string} Button index
 		 * @return {function}
 		 */ /**
-		* Set the action of a button
-		* @param  {node} node Button element
-		* @param  {function} action Function to set
-		* @return {Buttons} Self for chaining
-		*/
+	   * Set the action of a button
+	   * @param  {node} node Button element
+	   * @param  {function} action Function to set
+	   * @return {Buttons} Self for chaining
+	   */
 		action: function (node, action) {
 			var button = this._nodeToButton(node);
 
@@ -14531,11 +14531,11 @@
 		 * @param  {int|string} node Button index
 		 * @return {string} Button text
 		 */ /**
-		* Set the text for a button
-		* @param  {int|string|function} node Button index
-		* @param  {string} label Text
-		* @return {Buttons} Self for chaining
-		*/
+	   * Set the text for a button
+	   * @param  {int|string|function} node Button index
+	   * @param  {string} label Text
+	   * @return {Buttons} Self for chaining
+	   */
 		text: function (node, label) {
 			var button = this._nodeToButton(node);
 			var textNode = button.textNode;
@@ -40270,7 +40270,6 @@
 	return DataTable;
 }));
 
-
 /*! Select for DataTables 3.0.1
  * © SpryMedia Ltd - datatables.net/license/mit
  */
@@ -42298,7 +42297,6 @@
 
 	return DataTable;
 }));
-
 
 /*! StateRestore 1.4.1
  * © SpryMedia Ltd - datatables.net/license

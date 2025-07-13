@@ -15,6 +15,7 @@ function caricaMieiQuiz(data) {
                 { type: 'string', targets: [1], searchPanes: { show: false } },
                 {
                     targets: [2], searchPanes: {
+                        orderable: false,
                         threshold: 1,
                         options: [
                             {
@@ -46,9 +47,9 @@ function caricaMieiQuiz(data) {
                 },
                 { targets: [3, 4], type: 'date', render: DataTable.render.date(), searchable: false },
                 { targets: 0, type: 'integer', visible: false, orderable: false },
-                { targets: 5, type: 'html', searchPanes: { threshold: 1 } },
+                { targets: 5, type: 'html', searchPanes: { threshold: 1, orderable: false } },
                 { targets: 6, type: 'html', orderable: false, searchable: false, searchPanes: { show: false } },
-                { targets: 7, type: 'integer', visible: false, searchPanes: { show: true, threshold: 1 }, },
+                { targets: 7, type: 'integer', visible: false, searchPanes: { show: true, threshold: 1, orderable: false }, },
             ],
             responsive: true,
             lengthMenu: [10, 25, 50, -1],

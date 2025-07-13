@@ -1,33 +1,31 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.template import loader
 from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from urllib.parse import urlencode
 
 from . import utilities
 from . import data_layer as server
-from django.http import JsonResponse, HttpResponseBadRequest
 from .data_layer import salvaQuizNelDB
-import json
-from django.views.decorators.csrf import csrf_exempt
 
 import random
+import json
 
 indexTemplateName = "index.html"
 imieiquizTemplateName = "imieiquiz.html"
 giocaTemplateName = "gioca.html"
 erroreTemplateName = "errore.html"
 visualizzaPartecipazioneTemplateName = "visualizzaPartecipazione.html"
+statisticheTemplateName = "statistiche.html"
 
 SUPER_USER = "demo"
-
 
 def estrazioneQueryString(request):
     parametri = request.GET
     parametri = {k: v[0] if len(v) == 1 else v for k, v in parametri.lists()}
     return parametri
-
 
 def index(request):
     res = HttpResponse(content_type="text/html")
@@ -60,13 +58,13 @@ def index(request):
         record.append({"valore": dataFine})
 
         if isAttivo == '1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-success'>Aperto</span>"),
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-table badge-success'>Aperto</span>"),
                           "impostazioni": {"class": "text-center align-middle"}})
         elif isFuturo == '1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-info'>In apertura</span>"),
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-table badge-info'>In apertura</span>"),
                           "impostazioni": {"class": "text-center align-middle"}})
         elif isScaduto == '1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-danger'>Terminato</span>"),
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-table badge-danger'>Terminato</span>"),
                           "impostazioni": {"class": "text-center align-middle"}})
 
         record.append({"valore": annoInizio})
@@ -179,13 +177,13 @@ def imieiquiz(request):
         record.append({"valore": dataFine})
 
         if isAttivo == '1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-success'>Aperto</span>"),
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-table badge-success'>Aperto</span>"),
                           "impostazioni": {"class": "text-center"}})
         elif isFuturo == '1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-info'>In apertura</span>"),
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-table badge-info'>In apertura</span>"),
                           "impostazioni": {"class": "text-center"}})
         elif isScaduto == '1':
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-danger'>Terminato</span>"),
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-table badge-danger'>Terminato</span>"),
                           "impostazioni": {"class": "text-center"}})
         if isPartecipato > 0:
             record.append({"valore": mark_safe("<div class='btn-group'>\

@@ -127,7 +127,7 @@
         "loadMessage": "Caricamento Pannello di Ricerca",
         "title": "Filtri Attivi - %d",
         "showMessage": "Mostra tutto",
-        "collapseMessage": "Espandi tutto"
+        "collapseMessage": "Comprimi tutto"
     },
     "select": {
         "cells": {

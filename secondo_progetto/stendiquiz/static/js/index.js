@@ -13,6 +13,7 @@ function caricaQuiz(data) {
             ],
             columnDefs: [{
                 searchPanes: {
+                    orderable: false,
                     threshold: 1,
                 },
                 type: 'string',
@@ -20,6 +21,7 @@ function caricaQuiz(data) {
             },
             {
                 targets: [3], searchPanes: {
+                    orderable: false,
                     options: [
                         {
                             label: '1-5',
@@ -49,9 +51,19 @@ function caricaQuiz(data) {
                 }
             },
             { targets: [4, 5], type: 'date', render: DataTable.render.date(), searchable: false },
-            { type: 'string', targets: [1] },
-            { targets: [0, 7], type: 'integer', visible: false, orderable: false },
-            { targets: 6, type: 'html' },
+            {
+                type: 'string', targets: [1], searchPanes: {
+                    orderable: false, 
+                    dtOpts: {
+                        paging: true,          
+                        pagingType: 'numbers',
+                        //pageLength: 5,         // Mostra 5 voci per pagina
+                        //searching: false       // Disabilita la barra di ricerca interna al pannello
+                    }
+                }
+            },
+            { targets: [0, 7], type: 'integer', visible: false, orderable: false, searchPanes: { orderable: false } },
+            { targets: 6, type: 'html', searchPanes: { orderable: false } },
             ],
             responsive: true,
             lengthMenu: [10, 25, 50, -1],
