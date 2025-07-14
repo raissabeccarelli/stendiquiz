@@ -72,23 +72,23 @@ document.addEventListener('DOMContentLoaded', function () {
         risposteContainer.insertAdjacentHTML('beforeend', '<hr>');
       }
       const rispostaHTML = `
-        <div class = "mb-2 rispostaInfo">
+        <div class = "mb-2 rispostaInfo rispostaDomanda${parseInt(domandaIdx) + 1}">
           <div class = " numeroRisposta numeroRisposta${parseInt(domandaIdx) + 1} mb-2">
-          <label class="mb-0">Risposta ${rispostaIdx + 1}</label>
+          <label class="mb-0">Risposta</label>
           </div>
         <div class="row align-items-start mb-2 risposta">
           <div class="col-md-7">
-              <input id="Risposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}"type="text" class="form-control testoRisposta" placeholder="Inserisci il testo della risposta" required>
+              <input id="Risposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}"type="text" class="form-control testoRisposta" placeholder="Inserisci il testo della risposta" data-domanda-idx = "${parseInt(domandaIdx) + 1}" data-risposta-idx ="${rispostaIdx + 1}" required>
               <small id="charCounterRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" class="form-text text-muted"></small>
               <div id="invalidFeedbackRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" class="invalid-feedback"></div>
           </div>
           <div class="col-md-2">
-            <input id="PunteggioRisposta${rispostaIdx + 1}" type="number" class="form-control punteggioRisposta" placeholder="Pt." min = "0" required>
-            <div id="invalidFeedbackPunteggioRisposta${rispostaIdx + 1}" class="invalid-feedback"></div>
+            <input id="PunteggioRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" type="number" class="form-control punteggioRisposta" placeholder="Pt." min = "0" required  data-domanda-idx = "${parseInt(domandaIdx) + 1}" data-risposta-idx ="${rispostaIdx + 1}"  data-toggle="tooltip"
+         data-placement="right" title="Punteggio non valido!">
           </div>
           <div class="col-md-2 d-flex align-items-center justify-content-center">
             <div class = "form-check">
-            <input type="radio" class="form-check-input tipoRispostaRadio" name="corretta-${domandaIdx}" required ` + (rispostaIdx === 0 ? 'checked' : '') + `>
+            <input type="radio" class="form-check-input tipoRispostaRadio" name="corretta-${domandaIdx}" required ` + (rispostaIdx === 0 ? 'checked' : '') + ` data-domanda-idx = "${parseInt(domandaIdx) + 1}" data-risposta-idx = "${rispostaIdx + 1}">
             <label class="ms-2 mb-0">Corretta</label>
             </div>
           </div>
@@ -99,12 +99,20 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
       `;
       risposteContainer.insertAdjacentHTML('beforeend', rispostaHTML);
+      if ($('.rispostaDomanda' + (parseInt(domandaIdx) + 1) + ' input[type="radio"]:checked').length > 0 && rispostaIdx > 0) {
+        $('#PunteggioRisposta' + (parseInt(domandaIdx) + 1) + '\\.' + (rispostaIdx + 1)).prop('disabled', true);
+      }
+
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
 
       $('.testoRisposta').on('input', function () {
-        var id = $(this).attr("id");
+        var domandaIdx = $(this).data('domanda-idx');
+        var rispostaIdx = $(this).data('risposta-idx');
         var lunghezza = $(this).val().length;
-        $('#charCounter' + id).text(lunghezza + ' / 40 caratteri');
-        validaCampoTesto($(this), "La lunghezza massima per il testo della risposta è 40 caratteri", "Il testo della risposta è obbligatorio!", 40, $('#charCounter' + id), $('#invalidFeedback' + id));
+        $('#charCounterRisposta' + domandaIdx + '\\.' + rispostaIdx).text(lunghezza + ' / 40 caratteri');
+        validaCampoTesto($(this), "La lunghezza massima per il testo della risposta è 40 caratteri", "Il testo della risposta è obbligatorio!", 40, $('#charCounterRisposta' + domandaIdx + '\\.' + rispostaIdx), $('#invalidFeedbackRisposta' + domandaIdx + '\\.' + rispostaIdx));
         $('.erroreRisposte').addClass('d-none');
       });
 
@@ -114,17 +122,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
       $('.punteggioRisposta').on('input', function () {
         $('.erroreRisposte').addClass('d-none');
+        $(this).removeClass("is-invalid");
       });
     }
 
+    $('.tipoRispostaRadio').on('change', function () {
+      if (!$(this).is(':checked')) {
+        return;
+      }
+
+      var domandaIdx = $(this).data('domanda-idx');
+      var rispostaIdx = $(this).data('risposta-idx');
+
+      $('.erroreRisposte').addClass('d-none');
+
+      var selettoreInputDomanda = '.rispostaDomanda' + domandaIdx + ' input[type="number"]';
+      $(selettoreInputDomanda).prop('disabled', true).val('');
+
+      var idInputPunteggio = '#PunteggioRisposta' + domandaIdx + '\\.' + rispostaIdx;
+      $(idInputPunteggio).prop('disabled', false);
+    });
+
     if (e.target.closest('.rimuoviRispostaBtn') != null) {
+
       const domandaCard = e.target.closest('.domanda');
       const domandaIdx = domandaCard.getAttribute('data-index');
-      if (e.target.closest('.rimuoviRispostaBtn')) {
-        var rispostaIdx = $('.numeroRisposta' + parseInt(domandaIdx + 1)).length;
-        rispostaIdx--;
-        if (rispostaIdx == 0) {
-          $(e.target).prevAll('hr').remove();
+      const contenitoreRisposta = e.target.closest('.risposta');
+      if (contenitoreRisposta && domandaCard) {
+        if (e.target.closest('.rimuoviRispostaBtn')) {
+          let rispostaIdx = contenitoreRisposta.querySelector(".testoRisposta").dataset.rispostaIdx;
+          let radioCorretta = contenitoreRisposta.querySelector(".tipoRispostaRadio");
+          if ((rispostaIdx - 1) == 0) {
+            $(e.target).prevAll('hr').remove();
+          }
+          else if (radioCorretta.checked) {
+            let radioCorrettaPrevious = document.querySelector('.tipoRispostaRadio[data-domanda-idx="' + (parseInt(domandaIdx) + 1) + '"][data-risposta-idx="' + (rispostaIdx - 1) + '"]');
+            let punteggioRispostaPrevious = document.querySelector('.punteggioRisposta[data-domanda-idx="' + (parseInt(domandaIdx) + 1) + '"][data-risposta-idx="' + (rispostaIdx - 1) + '"]');
+            radioCorrettaPrevious.checked = true;
+            punteggioRispostaPrevious.disabled = false;
+          }
         }
       }
       e.target.closest('.rispostaInfo').remove();
@@ -215,11 +251,15 @@ document.addEventListener('DOMContentLoaded', function () {
             k++;
           });
 
-          if (isNaN(punteggio.value)) {
-            punteggio.classList.add('is-invalid');
-            $('invalidFeedbackPunteggioRisposta' + (i + 1)).text("Il punteggio deve essere un numero!");
-            valid = false;
-          }
+          k = 0;
+          $('.punteggioRisposta').each(function () {
+            if ($('#PunteggioRisposta' + (l + 1) + '\\.' + (k + 1)).length) {
+              if (!validaPunteggio($('#PunteggioRisposta' + (l + 1) + '\\.' + (k + 1)), "Inserire un punteggio maggiore di 0!", "Il punteggio è obbligatorio!")) {
+                valid = false;
+              }
+            }
+            k++;
+          });
 
           if (punteggio.value === '') {
             punteggio.value = 0;
@@ -253,8 +293,6 @@ document.addEventListener('DOMContentLoaded', function () {
       data_fine: dataFineInput.value.trim(),
       domande: domande
     });
-
-    alert(body);
 
     fetch('/api/salva_quiz/', {
       method: 'POST',
@@ -315,7 +353,6 @@ function validaCampoTesto(selettore, messaggioErrore, messaggioObbligatorio, lun
       charCounter.addClass('d-none');
       selettore.removeClass('is-valid');
       selettore.addClass('is-invalid');
-      selettore.removeClass('is-valid');
     }
   }
   else {
@@ -325,6 +362,30 @@ function validaCampoTesto(selettore, messaggioErrore, messaggioObbligatorio, lun
     selettore.addClass('is-invalid');
   }
   return false;
+}
+
+function validaPunteggio(selettore, messaggioErrore, messaggioObbligatorio) {
+  if (!selettore.is(':disabled')) {
+    if (selettore.val() != '') {
+      if (isNumeric(selettore.val()) && selettore.val() > 0) {
+        selettore.removeClass('is-invalid');
+        selettore.addClass('is-valid');
+        return true;
+      }
+      else {
+        selettore.attr('title', messaggioErrore);
+        selettore.removeClass('is-valid');
+        selettore.addClass('is-invalid');
+      }
+    }
+    else {
+      selettore.attr('title', messaggioObbligatorio);
+      selettore.removeClass('is-valid');
+      selettore.addClass('is-invalid');
+    }
+    return false;
+  }
+  return true;
 }
 
 function validaDateCreaQuiz() {
@@ -358,6 +419,11 @@ function validaDateCreaQuiz() {
     $('#data_inizio').removeClass('is-valid');
   }
   return false;
+}
+
+function isNumeric(str) {
+  if (typeof str != "string") return false
+  return !isNaN(str) && !isNaN(parseFloat(str))
 }
 
 $(document).ready(function () {

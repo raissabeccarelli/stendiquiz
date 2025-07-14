@@ -50,7 +50,30 @@ function caricaQuiz(data) {
                     ]
                 }
             },
-            { targets: [4, 5], type: 'date', render: DataTable.render.date(), searchable: false },
+            {
+                targets: [4, 5],
+                searchable: false,
+                render: function (data, type, row) {
+                    if (type === 'sort') {
+                        if (data) {
+                            let parts = data.split(' ')[0].split('/');
+                            if (parts.length === 3) {
+                                return parts[2] + '-' + parts[1] + '-' + parts[0];
+                            }
+                        }
+                        return '';
+                    }
+
+                    if (type === 'display') {
+                        if (data) {
+                            return data;
+                        }
+                        return '';
+                    }
+
+                    return data;
+                }
+            },
             {
                 type: 'string', targets: [1], searchPanes: {
                     orderable: false,
