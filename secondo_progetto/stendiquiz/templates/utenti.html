@@ -12,6 +12,20 @@
 	<script src="{% static 'js/utilities.js' %}"></script>
 	<script src="{% static 'js/modal_crea_quiz.js' %}"></script>
 	<script src="{% static 'js/index.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const righe = document.querySelectorAll("#tabellaUtenti tbody tr");
+            righe.forEach(riga => {
+                const username = riga.dataset.username;
+                if (username) {
+                    riga.style.cursor = "pointer";
+                    riga.addEventListener("click", () => {
+                        window.location.href = `/statistiche?utente=${encodeURIComponent(username)}`;
+                    });
+                }
+            });
+        });
+    </script>
 </head>
 
 <body onLoad="includiFile(); caricaUtenti();">
@@ -45,7 +59,7 @@
 			</thead>
 			<tbody>
 				{%for riga in risultati.risultato %}
-				<tr>
+				<tr data-username="{{ riga.0.valore }}">
 					{% for cella in riga %}
 					<td {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}'{%endfor%}>
 						{{cella.valore}}

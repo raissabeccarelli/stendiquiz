@@ -392,7 +392,11 @@ def utenti(request):
     return res
 
 def statistiche(request):
-    nomeutente = "demo" 
+    nomeutente = request.GET.get("utente", None)
+
+    if not nomeutente:
+        return HttpResponse("Utente non specificato", status=400)
+
     res = HttpResponse(content_type="text/html")
     context = {}
     context["infoPagina"] = {
@@ -400,30 +404,36 @@ def statistiche(request):
         "root": [{"pagina": "Stendiquiz", "link": "./"}]
     }
 
-    partecipazioni = server.getStatistiche()
+    partecipazioni = server.getStatistiche(nomeutente)
 
     risultato = []
     for p in partecipazioni:
-        record = []
-        record.append({"valore": p["QUIZCODICE"]})
-        record.append({"valore": p["TITOLO"]})
-        #record.append({"valore": p["punteggio"]})
-        record.append({"valore": p["DATA"]})
+        record = [
+            {"valore": p["QUIZCODICE"]},
+            {"valore": p["TITOLO"]},
+            #{"valore": p["punteggio"]},
+            {"valore": utilities.DataFormatoView(p["DATA"])}
+        ]
         risultato.append(record)
-
-    listaIntestazioni = [
-        {"valore": "Codice Quiz"},
-        {"valore": "Titolo"},
-        #{"valore": "Punteggio"},
-        {"valore": "Data Partecipazione"},
-    ]
 
     context["risultati"] = {
         "risultato": risultato,
-        "listaIntestazioni": listaIntestazioni
+        "listaIntestazioni": [
+            {"valore": "Codice Quiz"},
+            {"valore": "Titolo"},
+            #{"valore": "Punteggio"},
+            {"valore": "Data Partecipazione"},
+        ]
     }
+
+    context["totale_quiz"] = len(partecipazioni)
+    #context["punteggio_medio"] = (
+       # sum([int(p["punteggio"]) for p in partecipazioni]) / len(partecipazioni)
+       # if partecipazioni else 0
+    #)
 
     template = loader.get_template(statisticheTemplateName)
     page = template.render(context=context, request=request)
     res.write(page)
     return res
+

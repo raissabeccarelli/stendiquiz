@@ -449,16 +449,17 @@ def getUtenti(parametri):
     risultati = eseguiQuery(query)
     return risultati
 
-def getStatistiche():
-    QUERY = """
+def getStatistiche(nomeutente):
+    nomeutente = nomeutente.replace("'", "''")
+
+    QUERY = f"""
         SELECT 
             p.QUIZCODICE,
             q.TITOLO,
             p.DATA
         FROM Partecipazioni p
         JOIN Quiz q ON p.QUIZCODICE = q.CODICE
-        WHERE p.NOMEUTENTE = 'raii'
+        WHERE p.NOMEUTENTE = '{nomeutente}'
         ORDER BY p.DATA DESC
     """
-    risultati = eseguiQuery(QUERY)
-    return risultati
+    return eseguiQuery(QUERY)
