@@ -19,6 +19,7 @@ giocaTemplateName = "gioca.html"
 erroreTemplateName = "errore.html"
 visualizzaPartecipazioneTemplateName = "visualizzaPartecipazione.html"
 statisticheTemplateName = "statistiche.html"
+utentiTemplateName = "utenti.html"
 
 SUPER_USER = "demo"
 
@@ -354,8 +355,7 @@ def utenti(request):
         "root": [{"pagina": "Stendiquiz", "link": "./"}]
     }
 
-    # Simulazione della risposta da una sorgente dati (es. API o DB)
-    rispostaServer = server.getUtenti(parametri={})  # <-- Adatta questa chiamata al tuo backend
+    rispostaServer = server.getUtenti(parametri={})
 
     risultato = []
     for utente in rispostaServer:
@@ -384,7 +384,7 @@ def utenti(request):
         "listaIntestazioni": listaIntestazioni
     }
 
-    template = loader.get_template("utenti.html")  # Sostituisci con il tuo path corretto
+    template = loader.get_template(utentiTemplateName)
     page = template.render(context=context, request=request)
     res.write(page)
     return res

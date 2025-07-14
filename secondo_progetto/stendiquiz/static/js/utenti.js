@@ -1,6 +1,6 @@
 function caricaUtenti(data) {
-    var table = new DataTable('#tabellaUtenti', {
-        data: data,
+    var table = new DataTable('#tabellaUtenti', 
+    {
         columns: [
             { title: "Nome utente" },
             { title: "Nome" },

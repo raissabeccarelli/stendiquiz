@@ -414,7 +414,7 @@ def getUtenti(parametri):
     if "nomeutente" in parametri:
         tipologia = TIPOLOGIA_RICERCA["uguale"]
         condizioniWhere = aggiungiCondizioneWhere(
-            condizione=condizioniWhere, nome="Utenti.NOMEUTENTE", valore=parametri["nomeUtente"], tipologia=tipologia)
+            condizione=condizioniWhere, nome="Utenti.NOMEUTENTE", valore=parametri["nomeutente"], tipologia=tipologia)
 
     if "email" in parametri:
         tipologia = TIPOLOGIA_RICERCA["uguale"]
