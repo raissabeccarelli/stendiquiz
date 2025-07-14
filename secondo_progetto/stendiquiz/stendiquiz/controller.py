@@ -342,10 +342,6 @@ def visualizzapartecipazione(request):
 
     return res
 
-from django.http import HttpResponse
-from django.template import loader
-from django.utils.safestring import mark_safe
-
 def utenti(request):
     res = HttpResponse(content_type="text/html")
 
@@ -364,11 +360,15 @@ def utenti(request):
         nome = utente["nome"]
         cognome = utente["cognome"]
         email = utente["email"]
+        quizCreati = utente["quizCreati"]
+        quizGiocati = utente["quizGiocati"]
 
         record.append({"valore": username})
         record.append({"valore": nome})
         record.append({"valore": cognome})
         record.append({"valore": email})
+        record.append({"valore": quizCreati})
+        record.append({"valore": quizGiocati})
 
         risultato.append(record)
 
@@ -376,7 +376,9 @@ def utenti(request):
         {"valore": "Nome utente"},
         {"valore": "Nome"},
         {"valore": "Cognome"},
-        {"valore": "Email"}
+        {"valore": "Email"},
+        {"valore": "# Quiz creati"},
+        {"valore": "# Quiz giocati"}
     ]
 
     context["risultati"] = {
@@ -385,6 +387,43 @@ def utenti(request):
     }
 
     template = loader.get_template(utentiTemplateName)
+    page = template.render(context=context, request=request)
+    res.write(page)
+    return res
+
+def statistiche(request):
+    nomeutente = "demo" 
+    res = HttpResponse(content_type="text/html")
+    context = {}
+    context["infoPagina"] = {
+        "page": f"Statistiche di {nomeutente}",
+        "root": [{"pagina": "Stendiquiz", "link": "./"}]
+    }
+
+    partecipazioni = server.getStatistiche()
+
+    risultato = []
+    for p in partecipazioni:
+        record = []
+        record.append({"valore": p["QUIZCODICE"]})
+        record.append({"valore": p["TITOLO"]})
+        #record.append({"valore": p["punteggio"]})
+        record.append({"valore": p["DATA"]})
+        risultato.append(record)
+
+    listaIntestazioni = [
+        {"valore": "Codice Quiz"},
+        {"valore": "Titolo"},
+        #{"valore": "Punteggio"},
+        {"valore": "Data Partecipazione"},
+    ]
+
+    context["risultati"] = {
+        "risultato": risultato,
+        "listaIntestazioni": listaIntestazioni
+    }
+
+    template = loader.get_template(statisticheTemplateName)
     page = template.render(context=context, request=request)
     res.write(page)
     return res

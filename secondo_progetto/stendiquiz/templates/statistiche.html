@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+	<title>STENDIQUIZ</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	{% include "commons/import_comuni.html" %}
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+	<script src="{% static 'js/sidebar.js' %}"></script>
+	<script src="{% static 'js/utilities.js' %}"></script>
+	<script src="{% static 'js/modal_crea_quiz.js' %}"></script>
+	<script src="{% static 'js/index.js' %}"></script>
+</head>
+
+<body onLoad="includiFile(); caricaStatistiche();">
+	<!--Message Box-->
+	<div data-include="message_box"></div>
+	<!--Alert Logout-->
+	<div data-include="alert_logout"></div>
+	<!--Alert Success-->
+	<div id="alertSuccess" class="alert alert-success alert-dismissible fade show fixed-top d-none" role="alert"></div>
+	<div class="wrapper d-flex align-items-stretch">
+		<!--Sidebar-->
+		<nav id="sidebar" data-include="sidebar"></nav>
+		<!--Modale Crea Quiz-->
+		{% include "commons/modale_creaquiz.html" %}
+		<!-- Page Content  -->
+		<div id="content" class="p-4 p-md-5 pt-5 d-flex flex-row justify-content-center align-items-center">
+			<div class="container-fluid">
+				<!--Breadcrumb-->
+				{% include "commons/breadcrumb.html" %}
+
+                <h2>Statistiche di demo</h2>
+
+                <h4>Dettaglio quiz giocati</h4>
+                <table id="tabellaStatistiche" class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th>Codice Quiz</th>
+                        <th>Titolo</th>
+                        <!--<th>Punteggio</th>-->
+                        <th>Data Partecipazione</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for riga in risultati.risultato %}
+                        <tr>
+                        {% for cella in riga %}
+                        <td>{{ cella.valore }}</td>
+                        {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+		</div>
+	</div>
+	<!--Footer-->
+	<div data-include="footer"></div>
+</body>
+
+</html>

@@ -33,4 +33,5 @@ urlpatterns = [
     path("visualizzapartecipazione", controller.visualizzapartecipazione,
          name="visualizzapartecipazione"),
     path("utenti", controller.utenti, name="utenti"),
+    path("statistiche", controller.statistiche, name="statistiche"),
 ]

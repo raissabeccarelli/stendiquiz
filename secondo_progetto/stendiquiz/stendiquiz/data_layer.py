@@ -402,11 +402,23 @@ def getPartecipazione(parametri):
 def getUtenti(parametri):
     QUERY_UTENTI = """
         SELECT 
-            Utenti.NOMEUTENTE AS username, 
-            Utenti.NOME AS nome, 
-            Utenti.COGNOME AS cognome, 
-            Utenti.EMAIL AS email 
-        FROM Utenti
+            u.NOMEUTENTE AS username, 
+            u.NOME AS nome, 
+            u.COGNOME AS cognome, 
+            u.EMAIL AS email,
+            COALESCE(q.num_quiz, 0) AS quizCreati,
+            COALESCE(p.num_partecipazioni, 0) AS quizGiocati
+        FROM Utenti u
+        LEFT JOIN (
+            SELECT CREATORE, COUNT(*) AS num_quiz
+            FROM Quiz
+            GROUP BY CREATORE
+        ) q ON u.NOMEUTENTE = q.CREATORE
+        LEFT JOIN (
+            SELECT NOMEUTENTE, COUNT(*) AS num_partecipazioni
+            FROM Partecipazioni
+            GROUP BY NOMEUTENTE
+        ) p ON u.NOMEUTENTE = p.NOMEUTENTE
     """
 
     condizioniWhere = ""
@@ -414,25 +426,39 @@ def getUtenti(parametri):
     if "nomeutente" in parametri:
         tipologia = TIPOLOGIA_RICERCA["uguale"]
         condizioniWhere = aggiungiCondizioneWhere(
-            condizione=condizioniWhere, nome="Utenti.NOMEUTENTE", valore=parametri["nomeutente"], tipologia=tipologia)
+            condizione=condizioniWhere, nome="u.NOMEUTENTE", valore=parametri["nomeutente"], tipologia=tipologia)
 
     if "email" in parametri:
         tipologia = TIPOLOGIA_RICERCA["uguale"]
         condizioniWhere = aggiungiCondizioneWhere(
-            condizione=condizioniWhere, nome="Utenti.EMAIL", valore=parametri["email"], tipologia=tipologia)
+            condizione=condizioniWhere, nome="u.EMAIL", valore=parametri["email"], tipologia=tipologia)
 
     if "nome" in parametri:
         tipologia = TIPOLOGIA_RICERCA["like"]
         condizioniWhere = aggiungiCondizioneWhere(
-            condizione=condizioniWhere, nome="Utenti.NOME", valore=parametri["nome"], tipologia=tipologia)
+            condizione=condizioniWhere, nome="u.NOME", valore=parametri["nome"], tipologia=tipologia)
 
     if "cognome" in parametri:
         tipologia = TIPOLOGIA_RICERCA["like"]
         condizioniWhere = aggiungiCondizioneWhere(
-            condizione=condizioniWhere, nome="Utenti.COGNOME", valore=parametri["cognome"], tipologia=tipologia)
+            condizione=condizioniWhere, nome="u.COGNOME", valore=parametri["cognome"], tipologia=tipologia)
 
-    ORDER_BY = " ORDER BY Utenti.NOMEUTENTE"
+    ORDER_BY = " ORDER BY u.NOMEUTENTE"
 
     query = QUERY_UTENTI + condizioniWhere + ORDER_BY
     risultati = eseguiQuery(query)
+    return risultati
+
+def getStatistiche():
+    QUERY = """
+        SELECT 
+            p.QUIZCODICE,
+            q.TITOLO,
+            p.DATA
+        FROM Partecipazioni p
+        JOIN Quiz q ON p.QUIZCODICE = q.CODICE
+        WHERE p.NOMEUTENTE = 'raii'
+        ORDER BY p.DATA DESC
+    """
+    risultati = eseguiQuery(QUERY)
     return risultati
