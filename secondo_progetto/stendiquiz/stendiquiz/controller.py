@@ -246,9 +246,8 @@ def trovaParametri(parametri, parametriDaTrovare):
 
     return "ok"
 
-
-def creaquiz(request):
-    return render(request, 'creaquiz.html')
+#def creaquiz(request):
+    #return render(request, 'creaquiz.html')
 
 
 @csrf_exempt
@@ -340,4 +339,52 @@ def visualizzapartecipazione(request):
 
     res.write(page)
 
+    return res
+
+from django.http import HttpResponse
+from django.template import loader
+from django.utils.safestring import mark_safe
+
+def utenti(request):
+    res = HttpResponse(content_type="text/html")
+
+    context = {}
+    context["infoPagina"] = {
+        "page": "Utenti",
+        "root": [{"pagina": "Stendiquiz", "link": "./"}]
+    }
+
+    # Simulazione della risposta da una sorgente dati (es. API o DB)
+    rispostaServer = server.getUtenti(parametri={})  # <-- Adatta questa chiamata al tuo backend
+
+    risultato = []
+    for utente in rispostaServer:
+        record = []
+        username = utente["username"]
+        nome = utente["nome"]
+        cognome = utente["cognome"]
+        email = utente["email"]
+
+        record.append({"valore": username})
+        record.append({"valore": nome})
+        record.append({"valore": cognome})
+        record.append({"valore": email})
+
+        risultato.append(record)
+
+    listaIntestazioni = [
+        {"valore": "Nome utente"},
+        {"valore": "Nome"},
+        {"valore": "Cognome"},
+        {"valore": "Email"}
+    ]
+
+    context["risultati"] = {
+        "risultato": risultato,
+        "listaIntestazioni": listaIntestazioni
+    }
+
+    template = loader.get_template("utenti.html")  # Sostituisci con il tuo path corretto
+    page = template.render(context=context, request=request)
+    res.write(page)
     return res
