@@ -28,8 +28,9 @@ urlpatterns = [
     path('imieiquiz', controller.imieiquiz, name='imieiquiz'),
     path("funzionalitaDB", server.funzionalitaDB, name="funzionalitaDB"),
     path("errore", controller.errore, name="errore"),
-    path("creaquiz", controller.creaquiz, name="creaquiz"),
+    #path("creaquiz", controller.creaquiz, name="creaquiz"),
     path("api/salva_quiz/", controller.salva_quiz_api, name="salva_quiz_api"),
     path("visualizzapartecipazione", controller.visualizzapartecipazione,
          name="visualizzapartecipazione"),
+    path("utenti", controller.utenti, name="utenti"),
 ]

@@ -398,3 +398,41 @@ def getPartecipazione(parametri):
     risultati = eseguiQuery(query)
 
     return risultati
+
+def getUtenti(parametri):
+    QUERY_UTENTI = """
+        SELECT 
+            Utenti.NOMEUTENTE AS username, 
+            Utenti.NOME AS nome, 
+            Utenti.COGNOME AS cognome, 
+            Utenti.EMAIL AS email 
+        FROM Utenti
+    """
+
+    condizioniWhere = ""
+
+    if "nomeutente" in parametri:
+        tipologia = TIPOLOGIA_RICERCA["uguale"]
+        condizioniWhere = aggiungiCondizioneWhere(
+            condizione=condizioniWhere, nome="Utenti.NOMEUTENTE", valore=parametri["nomeutente"], tipologia=tipologia)
+
+    if "email" in parametri:
+        tipologia = TIPOLOGIA_RICERCA["uguale"]
+        condizioniWhere = aggiungiCondizioneWhere(
+            condizione=condizioniWhere, nome="Utenti.EMAIL", valore=parametri["email"], tipologia=tipologia)
+
+    if "nome" in parametri:
+        tipologia = TIPOLOGIA_RICERCA["like"]
+        condizioniWhere = aggiungiCondizioneWhere(
+            condizione=condizioniWhere, nome="Utenti.NOME", valore=parametri["nome"], tipologia=tipologia)
+
+    if "cognome" in parametri:
+        tipologia = TIPOLOGIA_RICERCA["like"]
+        condizioniWhere = aggiungiCondizioneWhere(
+            condizione=condizioniWhere, nome="Utenti.COGNOME", valore=parametri["cognome"], tipologia=tipologia)
+
+    ORDER_BY = " ORDER BY Utenti.NOMEUTENTE"
+
+    query = QUERY_UTENTI + condizioniWhere + ORDER_BY
+    risultati = eseguiQuery(query)
+    return risultati
