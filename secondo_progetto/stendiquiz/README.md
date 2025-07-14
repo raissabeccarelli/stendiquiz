@@ -1,6 +1,6 @@
 # Organizzazione del repository
 
-Il repository contiene le seguenti sottocartelle e i seguenti file:
+Il repository contiene, tra le altre, le seguenti sottocartelle e i seguenti file:
 
 - **/static**: file statici del sito web;
 - **/stendiquiz**: codice Python del controller del sito web;
