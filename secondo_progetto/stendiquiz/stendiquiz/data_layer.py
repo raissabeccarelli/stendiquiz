@@ -473,5 +473,4 @@ def getStatistiche(nomeutente):
         GROUP BY p.CODICE
         ORDER BY p.DATA DESC;
     """
-    print(QUERY)
     return eseguiQuery(QUERY)

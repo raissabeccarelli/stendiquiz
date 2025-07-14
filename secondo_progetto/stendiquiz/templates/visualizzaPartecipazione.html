@@ -12,6 +12,7 @@
     <script src="{% static 'js/sidebar.js' %}"></script>
     <script src="{% static 'js/utilities.js' %}"></script>
     <script src="{% static 'js/modal_crea_quiz.js' %}"></script>
+    <script src="{% static 'js/visualizza_partecipazione.js' %}"></script>
 </head>
 
 <body onLoad="includiFile();">
@@ -124,6 +125,10 @@
                             </div>
                         </form>
                         {% endfor %}
+                        <div class="text-center mt-5">
+                            <button type="button" class="btn btn-secondary btn-lg  px-5 mx-2" id="btnGiocaAncora"> Gioca Ancora</button>
+                            <button type="button" class="btn btn-primary btn-lg  px-5 mx-2" id="btnTornaHome"> Torna alla Home </button>
+                        </div>
                         {%endif%}
                     </div>
 

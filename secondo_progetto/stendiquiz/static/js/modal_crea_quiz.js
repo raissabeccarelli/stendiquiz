@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   aggiungiDomandaBtn.addEventListener('click', function () {
     $('#erroreDomande').addClass('d-none');
+    $('.erroreRisposte').addClass('d-none');
     const domandaHTML = `
       <div class="card mb-3 p-3 border shadow-sm domanda" data-index="${domandaIndex}">
         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -135,6 +136,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       var selettoreInputDomanda = '.rispostaDomanda' + domandaIdx + ' input[type="number"]';
       $(selettoreInputDomanda).prop('disabled', true).val('0');
+      $(selettoreInputDomanda).removeClass('is-valid');
+      $(selettoreInputDomanda).removeClass('is-invalid');
 
       var idInputPunteggio = '#PunteggioRisposta' + domandaIdx + '\\.' + rispostaIdx;
       $(idInputPunteggio).prop('disabled', false);
@@ -224,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (radio.checked) indiceCorretta = i;
         });
 
-        if (indiceCorretta === -1 || indiceCorretta > 1) {
+        if (indiceCorretta === -1) {
           radios.forEach(radio => radio.classList.add('is-invalid'));
           errorRisposte.textContent = "La domanda deve avere esattamente una risposta corretta!";
           errorRisposte.classList.remove('d-none');

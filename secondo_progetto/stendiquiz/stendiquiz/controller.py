@@ -330,7 +330,7 @@ def visualizzapartecipazione(request):
     print(infoQuiz)
     context = infoQuiz
     context["infoPagina"] = {"page": "Risultati", "root": [
-        {"pagina": "Stendiquiz", "link": "./"}, {"pagina": "Gioca", "link": "./"}]}
+        {"pagina": "Stendiquiz", "link": "./"}]}
 
     template = loader.get_template(visualizzaPartecipazioneTemplateName)
     page = template.render(context=context, request=request)
