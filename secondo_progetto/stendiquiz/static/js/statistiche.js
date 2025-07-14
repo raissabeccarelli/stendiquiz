@@ -1,5 +1,5 @@
 function caricaStatistiche(data) {
-    var table = new DataTable('#tabellaQuiz',
+    var table = new DataTable('#tabellaStatistiche',
         {
             columns: [
                 { "title": "Codice Partecipazione" },
@@ -119,7 +119,7 @@ function caricaStatistiche(data) {
         table.searchPanes.rebuildPane(1, true);
     });
 
-    $('#tabellaQuiz tbody').on('click', '.conferma-informazioni', function () {
+    $('#tabellaStatistiche tbody').on('click', '.conferma-informazioni', function () {
         var riga = table.row($(this).closest('tr'));
         var codicePartecipazione = riga.data()[0];
         window.location.href = "/visualizzapartecipazione?codice=" + codicePartecipazione;

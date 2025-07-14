@@ -418,15 +418,16 @@ def statistiche(request):
             {"valore": p["TITOLO"]},
             {"valore": p["CREATORE"]},
             {"valore": p["nRisposte"]},
-            {"valore": p["punteggioOttenuto"] + "/" + p["punteggioMassimo"]},
+            {"valore":  mark_safe("<span class='badge badge-punteggio badge-primary'>" + p["punteggioOttenuto"] + "/" + p["punteggioMassimo"] + "</span>"),
+             "impostazioni": {"class": "text-center align-start"}},
         ]
         percentuale = round((int(p["punteggioOttenuto"]) /
                              int(p["punteggioMassimo"])) * 100)
         if percentuale >= 60:
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-esito badge-success'>Superato</span>"),
+            record.append({"valore": mark_safe("<span class='badge badge-esito badge-success'>Superato</span>"),
                           "impostazioni": {"class": "text-center align-start"}})
         else:
-            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-esito badge-danger'>Non Superato</span>"),
+            record.append({"valore": mark_safe("<span class='badge badge-esito badge-danger'>Non Superato</span>"),
                            "impostazioni": {"class": "text-center align-start"}})
 
         record.append({"valore": utilities.DataFormatoView(p["DATA"])})

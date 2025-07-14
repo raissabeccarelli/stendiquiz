@@ -1,8 +1,10 @@
-<nav class="col-3 p-0" aria-label="breadcrumb">
-    <ol class="breadcrumb custom-breadcrumb">
-        {%for info in infoPagina.root%}
-        <li class="breadcrumb-item"><a href="{{info.link}}">{{info.pagina}}</a></li>
-        {%endfor%}
-        <li class="breadcrumb-item active" earia-current="page">{{infoPagina.page}}</li>
-    </ol>
-</nav>
+<div class="row">
+    <nav class="col-auto" aria-label="breadcrumb">
+        <ol class="breadcrumb custom-breadcrumb">
+            {%for info in infoPagina.root%}
+            <li class="breadcrumb-item"><a href="{{info.link}}">{{info.pagina}}</a></li>
+            {%endfor%}
+            <li class="breadcrumb-item active" earia-current="page">{{infoPagina.page}}</li>
+        </ol>
+    </nav>
+</div>

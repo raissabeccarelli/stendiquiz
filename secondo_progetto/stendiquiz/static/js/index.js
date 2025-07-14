@@ -113,7 +113,7 @@ function caricaQuiz(data) {
         table.searchPanes.rebuildPane(1, true);
     });
 
-    $('#tabellaQuiz tbody').on('click', 'tr', function () {
+    $('#tabellaQuiz tbody td:not(:last-child)').on('click', 'tr', function () {
         var codiceQuiz = table.row(this).data()[0];
         var nomeQuiz = table.row(this).data()[1];
         var dataInizio = table.row(this).data()[4];

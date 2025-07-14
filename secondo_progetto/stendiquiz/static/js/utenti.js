@@ -76,7 +76,7 @@ function caricaUtenti(data) {
         language: {
             searchPanes: {
                 clearMessage: 'Reset',
-                collapse: { 0: 'Filtri', _: 'Filtri (%d)' }
+                collapse: { 0: 'Ricerca Avanzata', _: 'Ricerca Avanzata (%d)' }
             },
             url: '../static/datatables/it-IT.json',
         },

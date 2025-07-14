@@ -10,7 +10,7 @@ table thead,
     color: #fff;
 }
 
-#tabellaQuiz td {
+#tabellaQuiz td:not(:last-child) {
     cursor: pointer;
 }
 
@@ -35,11 +35,15 @@ table thead,
 }
 
 .badge-pill-table {
-    min-width: 78px;
+    min-width: 4.875rem;
 }
 
-.badge-pill-esito {
-    min-width: 93px;
+.badge-esito {
+    min-width: 5.8125rem;
+}
+
+.badge-punteggio {
+    min-width: 3.75rem;
 }
 
 .custom-breadcrumb {

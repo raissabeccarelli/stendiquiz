@@ -119,12 +119,12 @@ function caricaMieiQuiz(data) {
         }
     });
 
-    $('#tabellaQuiz tbody').on('click', '.conferma-eliminazione', function () {
+    $('#tabellaQuiz tbody td:not(:last-child)').on('click', '.conferma-eliminazione', function () {
         var riga = table.row($(this).closest('tr'));
         var codiceQuiz = riga.data()[0];
         var nomeQuiz = riga.data()[1];
         $("#primaryButton").addClass("btn-danger");
-        $("#yesNoMessageTitle").text("Conferma eliminazione");
+        $("#yesNoMessageTitle").text("Elimina Quiz");
         $("#yesNoMessageMessage").text("Sei sicuro di voler eliminare il quiz \"" + nomeQuiz + "\"? Questa azione non può essere annullata.");
         if (!($("#primaryButton").text().includes("Elimina"))) {
             $("#primaryButton").append("Elimina");

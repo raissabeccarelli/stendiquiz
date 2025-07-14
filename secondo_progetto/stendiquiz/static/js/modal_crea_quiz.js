@@ -1,6 +1,7 @@
 var domandaIndex = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
+
   const quizModalEl = document.getElementById('quizModal');
   const quizModal = new bootstrap.Modal(quizModalEl);
   const form = document.getElementById('quizForm');
@@ -83,8 +84,8 @@ document.addEventListener('DOMContentLoaded', function () {
               <div id="invalidFeedbackRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" class="invalid-feedback"></div>
           </div>
           <div class="col-md-2">
-            <input id="PunteggioRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" type="number" class="form-control punteggioRisposta" placeholder="Pt." min = "0" required  data-domanda-idx = "${parseInt(domandaIdx) + 1}" data-risposta-idx ="${rispostaIdx + 1}"  data-toggle="tooltip"
-         data-placement="right" title="Punteggio non valido!">
+            <input id="PunteggioRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" type="number" class="form-control punteggioRisposta" min = "0" value = "0" data-toggle="tooltip" data-placement="top" title="Punteggio" required  data-domanda-idx = "${parseInt(domandaIdx) + 1}" data-risposta-idx ="${rispostaIdx + 1}">
+             <div id="invalidFeedbackPunteggioRisposta${parseInt(domandaIdx) + 1}.${rispostaIdx + 1}" class="invalid-tooltip"></div>
           </div>
           <div class="col-md-2 d-flex align-items-center justify-content-center">
             <div class = "form-check">
@@ -102,10 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if ($('.rispostaDomanda' + (parseInt(domandaIdx) + 1) + ' input[type="radio"]:checked').length > 0 && rispostaIdx > 0) {
         $('#PunteggioRisposta' + (parseInt(domandaIdx) + 1) + '\\.' + (rispostaIdx + 1)).prop('disabled', true);
       }
-
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-      });
 
       $('.testoRisposta').on('input', function () {
         var domandaIdx = $(this).data('domanda-idx');
@@ -137,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
       $('.erroreRisposte').addClass('d-none');
 
       var selettoreInputDomanda = '.rispostaDomanda' + domandaIdx + ' input[type="number"]';
-      $(selettoreInputDomanda).prop('disabled', true).val('');
+      $(selettoreInputDomanda).prop('disabled', true).val('0');
 
       var idInputPunteggio = '#PunteggioRisposta' + domandaIdx + '\\.' + rispostaIdx;
       $(idInputPunteggio).prop('disabled', false);
@@ -254,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
           k = 0;
           $('.punteggioRisposta').each(function () {
             if ($('#PunteggioRisposta' + (l + 1) + '\\.' + (k + 1)).length) {
-              if (!validaPunteggio($('#PunteggioRisposta' + (l + 1) + '\\.' + (k + 1)), "Inserire un punteggio maggiore di 0!", "Il punteggio è obbligatorio!")) {
+              if (!validaPunteggio($('#PunteggioRisposta' + (l + 1) + '\\.' + (k + 1)), "Inserire un punteggio maggiore di 0!", "Il punteggio è obbligatorio!", $('#invalidFeedbackPunteggioRisposta' + (l + 1) + '\\.' + (k + 1)))) {
                 valid = false;
               }
             }
@@ -364,7 +361,7 @@ function validaCampoTesto(selettore, messaggioErrore, messaggioObbligatorio, lun
   return false;
 }
 
-function validaPunteggio(selettore, messaggioErrore, messaggioObbligatorio) {
+function validaPunteggio(selettore, messaggioErrore, messaggioObbligatorio, invalidFeedback) {
   if (!selettore.is(':disabled')) {
     if (selettore.val() != '') {
       if (isNumeric(selettore.val()) && selettore.val() > 0) {
@@ -373,13 +370,13 @@ function validaPunteggio(selettore, messaggioErrore, messaggioObbligatorio) {
         return true;
       }
       else {
-        selettore.attr('title', messaggioErrore);
+        invalidFeedback.text(messaggioErrore);
         selettore.removeClass('is-valid');
         selettore.addClass('is-invalid');
       }
     }
     else {
-      selettore.attr('title', messaggioObbligatorio);
+      invalidFeedback.text(messaggioObbligatorio);
       selettore.removeClass('is-valid');
       selettore.addClass('is-invalid');
     }
