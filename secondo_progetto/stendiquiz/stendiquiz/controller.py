@@ -247,9 +247,6 @@ def trovaParametri(parametri, parametriDaTrovare):
 
     return "ok"
 
-#def creaquiz(request):
-    #return render(request, 'creaquiz.html')
-
 
 @csrf_exempt
 def salva_quiz_api(request):
@@ -342,6 +339,7 @@ def visualizzapartecipazione(request):
 
     return res
 
+
 def utenti(request):
     res = HttpResponse(content_type="text/html")
 
@@ -391,11 +389,17 @@ def utenti(request):
     res.write(page)
     return res
 
+
 def statistiche(request):
     nomeutente = request.GET.get("utente", None)
 
-    if not nomeutente:
-        return HttpResponse("Utente non specificato", status=400)
+    if not nomeutente or server.esisteUtente(nomeutente) == 0:
+        params = {'title': '502 Bad Server',
+                  'message': 'Non è possibile recuperare le statistiche dell\'utente selezionato. L\'utente non esiste.'}
+        query_string = urlencode(params)
+        base_url = reverse('errore')
+        url_con_parametri = f'{base_url}?{query_string}'
+        return redirect(url_con_parametri)
 
     res = HttpResponse(content_type="text/html")
     context = {}
@@ -405,35 +409,57 @@ def statistiche(request):
     }
 
     partecipazioni = server.getStatistiche(nomeutente)
-
+    percentuale = 0
     risultato = []
     for p in partecipazioni:
         record = [
+            {"valore": p["codicePartecipazione"]},
             {"valore": p["QUIZCODICE"]},
             {"valore": p["TITOLO"]},
-            #{"valore": p["punteggio"]},
-            {"valore": utilities.DataFormatoView(p["DATA"])}
+            {"valore": p["CREATORE"]},
+            {"valore": p["nRisposte"]},
+            {"valore": p["punteggioOttenuto"] + "/" + p["punteggioMassimo"]},
         ]
+        percentuale = round((int(p["punteggioOttenuto"]) /
+                             int(p["punteggioMassimo"])) * 100)
+        if percentuale >= 60:
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-esito badge-success'>Superato</span>"),
+                          "impostazioni": {"class": "text-center align-start"}})
+        else:
+            record.append({"valore": mark_safe("<span class='badge badge-pill badge-pill-esito badge-danger'>Non Superato</span>"),
+                           "impostazioni": {"class": "text-center align-start"}})
+
+        record.append({"valore": utilities.DataFormatoView(p["DATA"])})
+        record.append({"valore": mark_safe("<div class='btn-group'>\
+                                    <button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'\
+                                        aria-haspopup='true' aria-expanded='false'>\
+                                        <i class='fa-solid fa-bars'></i>\
+                                    </button>\
+                                    <div class='dropdown-menu'>\
+                                        <a class='dropdown-item conferma-informazioni' href='#'><i class='fa-solid fa-chart-simple'></i> Risultati</a>\
+                                    </div>\
+                                </div>"),
+                       "impostazioni": {"class": "text-center"}})
         risultato.append(record)
 
     context["risultati"] = {
         "risultato": risultato,
         "listaIntestazioni": [
+            {"valore": "Codice Partecipazione"},
             {"valore": "Codice Quiz"},
             {"valore": "Titolo"},
-            #{"valore": "Punteggio"},
+            {"valore": "Creatore"},
+            {"valore": "# Domande"},
+            {"valore": "Punteggio"},
+            {"valore": "Esito"},
             {"valore": "Data Partecipazione"},
+            {"valore": "Azioni"}
         ]
     }
 
     context["totale_quiz"] = len(partecipazioni)
-    #context["punteggio_medio"] = (
-       # sum([int(p["punteggio"]) for p in partecipazioni]) / len(partecipazioni)
-       # if partecipazioni else 0
-    #)
 
     template = loader.get_template(statisticheTemplateName)
     page = template.render(context=context, request=request)
     res.write(page)
     return res
-

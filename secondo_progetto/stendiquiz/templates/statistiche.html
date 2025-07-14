@@ -11,7 +11,7 @@
 	<script src="{% static 'js/sidebar.js' %}"></script>
 	<script src="{% static 'js/utilities.js' %}"></script>
 	<script src="{% static 'js/modal_crea_quiz.js' %}"></script>
-	<script src="{% static 'js/index.js' %}"></script>
+	<script src="{% static 'js/statistiche.js' %}"></script>
 </head>
 
 <body onLoad="includiFile(); caricaStatistiche();">
@@ -32,26 +32,29 @@
 				<!--Breadcrumb-->
 				{% include "commons/breadcrumb.html" %}
 
-                <table id="tabellaStatistiche" class="table table-hover">
-                    <thead>
-                        <tr>
-                        <th>Codice Quiz</th>
-                        <th>Titolo</th>
-                        <!--<th>Punteggio</th>-->
-                        <th>Data Partecipazione</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for riga in risultati.risultato %}
-                        <tr>
-                        {% for cella in riga %}
-                        <td>{{ cella.valore }}</td>
-                        {% endfor %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+				<table id="tabellaQuiz" class="table table-hover">
+					<thead>
+						<tr>
+							{% for cella in risultati.listaIntestazioni %}
+							<th {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}'
+								{%endfor%}>
+								{{cella.valore}}
+							</th>
+							{% endfor %}
+						</tr>
+					</thead>
+					<tbody>
+						{% for riga in risultati.risultato %}
+						<tr>
+							{% for cella in riga %}
+							<td {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}'
+								{%endfor%}>{{ cella.valore }}</td>
+							{% endfor %}
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 	<!--Footer-->

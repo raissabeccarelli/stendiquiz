@@ -38,6 +38,10 @@ table thead,
     min-width: 78px;
 }
 
+.badge-pill-esito {
+    min-width: 93px;
+}
+
 .custom-breadcrumb {
     background-color: #ececec;
 }

@@ -100,7 +100,7 @@ def aggiungiCondizione(condizione, nome, valore, tipologia):
 
 
 def getQuiz(parametri):
-    QUERY_QUIZ = "SELECT Quiz.CODICE AS codice, Quiz.TITOLO as titolo, Quiz.DATAINIZIO as dataInizio, Quiz.DATAFINE as dataFine, Quiz.CREATORE AS creatore,  YEAR(Quiz.DATAINIZIO) as annoInizio, (Quiz.DATAINIZIO <= NOW() AND Quiz.DATAFINE >= NOW()) as isAttivo, Quiz.DATAINIZIO >= NOW() as isFuturo, Quiz.DATAFINE <= NOW() as isScaduto, COUNT(DISTINCT Domande.NUMERO) AS nDomande FROM Quiz LEFT JOIN Domande ON Quiz.CODICE = Domande.QUIZCODICE "
+    QUERY_QUIZ = "SELECT Quiz.CODICE AS codice, Quiz.TITOLO as titolo, Quiz.DATAINIZIO as dataInizio, Quiz.DATAFINE as dataFine, Quiz.CREATORE AS creatore,  YEAR(Quiz.DATAINIZIO) as annoInizio, (Quiz.DATAINIZIO <= DATE(NOW()) AND Quiz.DATAFINE >= DATE(NOW())) as isAttivo, Quiz.DATAINIZIO > DATE(NOW()) as isFuturo, Quiz.DATAFINE < DATE(NOW()) as isScaduto, COUNT(DISTINCT Domande.NUMERO) AS nDomande FROM Quiz LEFT JOIN Domande ON Quiz.CODICE = Domande.QUIZCODICE "
     GROUP_BY = " GROUP BY Quiz.CODICE, Quiz.TITOLO, Quiz.DATAINIZIO, Quiz.DATAFINE, Quiz.CREATORE, annoInizio, isAttivo, isFuturo, isScaduto"
     ORDER_BY = " ORDER BY Quiz.TITOLO"
 
@@ -368,7 +368,8 @@ def salvaQuizNelDB(payload):
 
             query_risposta = f"""
                 INSERT INTO Risposte (QUIZCODICE, DOMANDA, NUMERO, TESTO, TIPORISPOSTA, PUNTEGGIO)
-                VALUES ({quiz_codice}, {idx}, {j}, '{testo_risposta}', '{tipo}', {punteggio})
+                VALUES ({quiz_codice}, {idx}, {j},
+                        '{testo_risposta}', '{tipo}', {punteggio})
             """
             eseguiQuery(query_risposta)
 
@@ -399,12 +400,13 @@ def getPartecipazione(parametri):
 
     return risultati
 
+
 def getUtenti(parametri):
     QUERY_UTENTI = """
-        SELECT 
-            u.NOMEUTENTE AS username, 
-            u.NOME AS nome, 
-            u.COGNOME AS cognome, 
+        SELECT
+            u.NOMEUTENTE AS username,
+            u.NOME AS nome,
+            u.COGNOME AS cognome,
             u.EMAIL AS email,
             COALESCE(q.num_quiz, 0) AS quizCreati,
             COALESCE(p.num_partecipazioni, 0) AS quizGiocati
@@ -449,17 +451,27 @@ def getUtenti(parametri):
     risultati = eseguiQuery(query)
     return risultati
 
+
 def getStatistiche(nomeutente):
     nomeutente = nomeutente.replace("'", "''")
 
     QUERY = f"""
-        SELECT 
+        SELECT
+            p.CODICE as codicePartecipazione,
             p.QUIZCODICE,
             q.TITOLO,
-            p.DATA
+            q.CREATORE,
+            p.DATA,
+            COUNT(RispostaUtenteQuiz.CODICERISPOSTA) AS nRisposte,
+            SUM(Risposte.PUNTEGGIO) AS punteggioOttenuto,
+            (SELECT SUM(Risposte2.PUNTEGGIO) FROM Risposte AS Risposte2 WHERE Risposte2.QUIZCODICE=q.CODICE) AS punteggioMassimo
         FROM Partecipazioni p
-        JOIN Quiz q ON p.QUIZCODICE = q.CODICE
+            JOIN Quiz q ON p.QUIZCODICE = q.CODICE
+            JOIN RispostaUtenteQuiz ON p.CODICE=RispostaUtenteQuiz.PARTECIPAZIONE
+            JOIN Risposte ON Risposte.QUIZCODICE = RispostaUtenteQuiz.CODICEQUIZ AND Risposte.DOMANDA = RispostaUtenteQuiz.CODICEDOMANDA AND Risposte.NUMERO = RispostaUtenteQuiz.CODICERISPOSTA
         WHERE p.NOMEUTENTE = '{nomeutente}'
-        ORDER BY p.DATA DESC
+        GROUP BY p.CODICE
+        ORDER BY p.DATA DESC;
     """
+    print(QUERY)
     return eseguiQuery(QUERY)

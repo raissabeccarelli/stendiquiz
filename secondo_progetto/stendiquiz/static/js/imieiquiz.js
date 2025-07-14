@@ -20,24 +20,28 @@ function caricaMieiQuiz(data) {
                         options: [
                             {
                                 label: '1-5',
+                                order: 0,
                                 value: function (rowData, rowIdx) {
                                     return rowData[2] <= 5;
                                 }
                             },
                             {
                                 label: '5-10',
+                                order: 1,
                                 value: function (rowData, rowIdx) {
                                     return rowData[2] <= 10 && rowData[2] > 5;
                                 }
                             },
                             {
                                 label: '10-15',
+                                order: 2,
                                 value: function (rowData, rowIdx) {
                                     return rowData[2] <= 15 && rowData[2] > 10;
                                 }
                             },
                             {
                                 label: '15+',
+                                order: 3,
                                 value: function (rowData, rowIdx) {
                                     return rowData[2] > 15;
                                 }

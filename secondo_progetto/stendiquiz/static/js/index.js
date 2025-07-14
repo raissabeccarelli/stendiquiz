@@ -14,9 +14,15 @@ function caricaQuiz(data) {
             columnDefs: [{
                 searchPanes: {
                     orderable: false,
+                    dtOpts: {
+                        paging: true,
+                        pagingType: 'numbers',
+                        pageLength: 5
+                    },
                     threshold: 1,
                 },
                 type: 'string',
+
                 targets: [2],
             },
             {
@@ -25,24 +31,28 @@ function caricaQuiz(data) {
                     options: [
                         {
                             label: '1-5',
+                            order: 0,
                             value: function (rowData, rowIdx) {
                                 return rowData[3] <= 5;
                             }
                         },
                         {
                             label: '5-10',
+                            order: 1,
                             value: function (rowData, rowIdx) {
                                 return rowData[3] <= 10 && rowData[3] > 5;
                             }
                         },
                         {
                             label: '10-15',
+                            order: 2,
                             value: function (rowData, rowIdx) {
                                 return rowData[3] <= 15 && rowData[3] > 10;
                             }
                         },
                         {
                             label: '15+',
+                            order: 3,
                             value: function (rowData, rowIdx) {
                                 return rowData[3] > 15;
                             }
@@ -72,17 +82,6 @@ function caricaQuiz(data) {
                     }
 
                     return data;
-                }
-            },
-            {
-                type: 'string', targets: [1], searchPanes: {
-                    orderable: false,
-                    dtOpts: {
-                        paging: true,
-                        pagingType: 'numbers',
-                        pageLength: 5,
-                        searching: false
-                    }
                 }
             },
             { targets: [0, 7], type: 'integer', visible: false, orderable: false, searchPanes: { orderable: false } },
@@ -133,5 +132,7 @@ function caricaQuiz(data) {
         }
     });
 }
+
+
 
 
