@@ -367,6 +367,16 @@ def utenti(request):
         record.append({"valore": email})
         record.append({"valore": quizCreati})
         record.append({"valore": quizGiocati})
+        record.append({"valore": mark_safe("<div class='btn-group'>\
+                                    <button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'\
+                                        aria-haspopup='true' aria-expanded='false'>\
+                                        <i class='fa-solid fa-bars'></i>\
+                                    </button>\
+                                    <div class='dropdown-menu'>\
+                                        <a class='dropdown-item vedi-Statistiche' href='#'><i class='fa-solid fa-chart-simple'></i> Statistiche</a>\
+                                    </div>\
+                                </div>"),
+                       "impostazioni": {"class": "text-center"}})
 
         risultato.append(record)
 
@@ -376,7 +386,8 @@ def utenti(request):
         {"valore": "Cognome"},
         {"valore": "Email"},
         {"valore": "# Quiz creati"},
-        {"valore": "# Quiz giocati"}
+        {"valore": "# Quiz giocati"},
+        {"valore": "Azioni"}
     ]
 
     context["risultati"] = {

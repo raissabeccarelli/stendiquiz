@@ -60,7 +60,7 @@
                     </thead>
                     <tbody>
                         {%for riga in risultati.risultato %}
-                        <tr data-username="{{ riga.0.valore }}">
+                        <tr>
                             {% for cella in riga %}
                             <td {% for chiave , valore in cella.impostazioni.items %} {{chiave}}='{{valore}}'
                                 {%endfor%}>

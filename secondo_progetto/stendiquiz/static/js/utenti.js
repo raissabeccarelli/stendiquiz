@@ -7,7 +7,8 @@ function caricaUtenti(data) {
             { title: "Cognome" },
             { title: "Email" },
             { title: "# Quiz Creati" },
-            { title: "# Quiz Giocati" }
+            { title: "# Quiz Giocati" },
+            { title: "Azioni" }
         ],
         columnDefs: [
             {
@@ -69,7 +70,8 @@ function caricaUtenti(data) {
                         }
                     ],
                 }
-            }
+            },
+            { targets: [6], type: 'html', orderable: false, searchable: false, searchPanes: { show: false } },
         ],
         responsive: true,
         lengthMenu: [10, 25, 50],
@@ -84,5 +86,11 @@ function caricaUtenti(data) {
             topStart: ['buttons', 'pageLength']
         },
         buttons: ['searchPanes']
+    });
+
+    $('#tabellaUtenti tbody').on('click', '.vedi-Statistiche', function () {
+        var riga = table.row($(this).closest('tr'));
+        var nomeUtente = riga.data()[0];
+        window.location.href = "/statistiche?utente=" + nomeUtente;
     });
 }
