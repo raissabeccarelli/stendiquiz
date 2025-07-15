@@ -14,7 +14,7 @@ if errorlevel 1 (
     echo Non e' stata trovata un'installazione di Python sulla macchina
     echo Per installare Python:
     echo ,%TAB%1. Visita il sito https://www.python.org/downloads/
-    echo ,%TAB%2. Scarica il programma di installazione per la versione più recente
+    echo ,%TAB%2. Scarica il programma di installazione per la versione piu' recente
     echo ,%TAB%3. Esegui il programma di installazione e segui le istruzioni mostrate sullo schermo
     pause
     exit /b
