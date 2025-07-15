@@ -1,22 +1,12 @@
 #sidebar {
   min-width: 270px;
   max-width: 270px;
-  background: #993366;
+  background: #AC577E;
   color: #fff;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
   position: relative;
-}
-
-#sidebar h2 {
-  margin-bottom: 20px;
-  font-weight: 700;
-  text-align: center;
-}
-
-#sidebar h2 .logo {
-  color: #fff;
 }
 
 #sidebar ul.components {

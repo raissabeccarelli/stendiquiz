@@ -9,6 +9,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/errore.css' %}" />
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <script src="{% static 'js/sidebar.js' %}"></script>
     <script src="{% static 'js/utilities.js' %}"></script>
     <script src="{% static 'js/modal_crea_quiz.js' %}"></script>
@@ -20,6 +21,8 @@
     <div data-include="alert_logout"></div>
     <!--Alert Partecipazione-->
     <div id="alertSuccess" class="alert alert-success fade show fixed-top d-none" role="alert"></div>
+    <!--Header-->
+    <header id="header" class="p-4" data-include="header"></header>
     <div class="wrapper d-flex align-items-stretch">
         <!--Modale Crea Quiz-->
         {% include "commons/modale_creaquiz.html" %}
@@ -126,8 +129,10 @@
                         </form>
                         {% endfor %}
                         <div class="text-center mt-5">
-                            <button type="button" class="btn btn-secondary btn-lg  px-5 mx-2" id="btnGiocaAncora"> Gioca Ancora</button>
-                            <button type="button" class="btn btn-primary btn-lg  px-5 mx-2" id="btnTornaHome"> Torna alla Home </button>
+                            <button type="button" class="btn btn-secondary btn-lg  px-5 mx-2" id="btnGiocaAncora"> Gioca
+                                Ancora</button>
+                            <button type="button" class="btn btn-primary btn-lg  px-5 mx-2" id="btnTornaHome"> Torna
+                                alla Home </button>
                         </div>
                         {%endif%}
                     </div>

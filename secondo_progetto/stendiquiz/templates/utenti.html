@@ -8,6 +8,7 @@
     {% include "commons/import_comuni.html" %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <script src="{% static 'js/sidebar.js' %}"></script>
     <script src="{% static 'js/utilities.js' %}"></script>
     <script src="{% static 'js/modal_crea_quiz.js' %}"></script>
@@ -35,7 +36,8 @@
     <div data-include="alert_logout"></div>
     <!--Alert Success-->
     <div id="alertSuccess" class="alert alert-success alert-dismissible fade show fixed-top d-none" role="alert"></div>
-
+    <!--Header-->
+	<header id="header" class="p-4" data-include="header"></header>
     <div class="wrapper d-flex align-items-stretch">
         <!--Sidebar-->
         <nav id="sidebar" data-include="sidebar"></nav>
