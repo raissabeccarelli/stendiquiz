@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    $('#btnSalva').prop("disabled", true);
     erroreDomande.classList.add('d-none');
     erroreDomande.textContent = '';
 
@@ -283,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     if (!valid) {
+      $('#btnSalva').prop("disabled", false);
       return;
     }
 

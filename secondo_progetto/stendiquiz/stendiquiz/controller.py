@@ -327,7 +327,6 @@ def visualizzapartecipazione(request):
                     "domande": domande
                     }
 
-    print(infoQuiz)
     context = infoQuiz
     context["infoPagina"] = {"page": "Risultati", "root": [
         {"pagina": "Stendiquiz", "link": "./"}]}

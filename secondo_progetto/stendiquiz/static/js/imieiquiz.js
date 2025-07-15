@@ -4,7 +4,7 @@ function caricaMieiQuiz(data) {
             columns: [
                 { "title": "Codice Quiz" },
                 { "title": "Titolo" },
-                { "title": "# Domande" },
+                { "title": "N° Domande" },
                 { "title": "Data Apertura" },
                 { "title": "Data Chiusura" },
                 { "title": "Stato" },
@@ -19,31 +19,31 @@ function caricaMieiQuiz(data) {
                         threshold: 1,
                         options: [
                             {
-                                label: '1-5',
+                                label: '0-10',
                                 order: 0,
                                 value: function (rowData, rowIdx) {
-                                    return rowData[2] <= 5;
+                                    return rowData[2] <= 10;
                                 }
                             },
                             {
-                                label: '5-10',
+                                label: '11-20',
                                 order: 1,
                                 value: function (rowData, rowIdx) {
-                                    return rowData[2] <= 10 && rowData[2] > 5;
+                                    return rowData[2] <= 20 && rowData[2] > 10;
                                 }
                             },
                             {
-                                label: '10-15',
+                                label: '21-30',
                                 order: 2,
                                 value: function (rowData, rowIdx) {
-                                    return rowData[2] <= 15 && rowData[2] > 10;
+                                    return rowData[2] <= 30 && rowData[2] > 20;
                                 }
                             },
                             {
-                                label: '15+',
+                                label: '30+',
                                 order: 3,
                                 value: function (rowData, rowIdx) {
-                                    return rowData[2] > 15;
+                                    return rowData[2] > 30;
                                 }
                             },
                         ]
@@ -79,7 +79,7 @@ function caricaMieiQuiz(data) {
                 { targets: 7, type: 'integer', visible: false, searchPanes: { show: true, threshold: 1, orderable: false }, },
             ],
             responsive: true,
-            lengthMenu: [10, 25, 50, -1],
+            lengthMenu: [10, 25, 50],
             language: {
                 searchPanes: {
                     clearMessage: 'Reset',

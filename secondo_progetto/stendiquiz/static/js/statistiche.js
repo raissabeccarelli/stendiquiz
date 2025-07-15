@@ -6,7 +6,7 @@ function caricaStatistiche(data) {
                 { "title": "Codice Quiz" },
                 { "title": "Titolo" },
                 { "title": "Creatore" },
-                { "title": "# Domande" },
+                { "title": "N° Domande" },
                 { "title": "Punteggio" },
                 { "title": "Esito" },
                 { "title": "Data Partecipazione" },
@@ -33,31 +33,31 @@ function caricaStatistiche(data) {
                     orderable: false,
                     options: [
                         {
-                            label: '1-5',
+                            label: '0-10',
                             order: 0,
                             value: function (rowData, rowIdx) {
-                                return rowData[4] <= 5;
+                                return rowData[4] <= 10;
                             }
                         },
                         {
-                            label: '5-10',
+                            label: '11-20',
                             order: 1,
                             value: function (rowData, rowIdx) {
-                                return rowData[4] <= 10 && rowData[4] > 5;
+                                return rowData[4] <= 20 && rowData[4] > 10;
                             }
                         },
                         {
-                            label: '10-15',
+                            label: '21-30',
                             order: 2,
                             value: function (rowData, rowIdx) {
-                                return rowData[4] <= 15 && rowData[4] > 10;
+                                return rowData[4] <= 30 && rowData[4] > 20;
                             }
                         },
                         {
-                            label: '15+',
+                            label: '30+',
                             order: 3,
                             value: function (rowData, rowIdx) {
-                                return rowData[4] > 15;
+                                return rowData[4] > 30;
                             }
                         },
                     ]

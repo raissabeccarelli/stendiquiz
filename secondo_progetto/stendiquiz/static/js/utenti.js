@@ -1,18 +1,20 @@
 function caricaUtenti(data) {
     var table = new DataTable('#tabellaUtenti', {
         data: data,
+        autoWidth: false,
         columns: [
             { title: "Nome utente" },
             { title: "Nome" },
             { title: "Cognome" },
             { title: "Email" },
-            { title: "# Quiz Creati" },
-            { title: "# Quiz Giocati" },
+            { title: "N° Quiz Creati" },
+            { title: "N° Quiz Giocati" },
             { title: "Azioni" }
         ],
         columnDefs: [
             {
                 targets: [0, 1, 2, 3], // Raggruppato per semplicità
+                type: 'string',
                 searchPanes: { orderable: false }
             },
             {
@@ -21,24 +23,24 @@ function caricaUtenti(data) {
                     orderable: false,
                     options: [
                         {
-                            label: '0',
+                            label: '0-10',
                             order: 0,
-                            value: function (rowData) { return parseInt(rowData[4]) === 0; }
+                            value: function (rowData) { return parseInt(rowData[4]) <= 10; }
                         },
                         {
-                            label: '1-5',
+                            label: '11-20',
                             order: 1,
-                            value: function (rowData) { return parseInt(rowData[4]) > 0 && parseInt(rowData[4]) <= 5; }
+                            value: function (rowData) { return parseInt(rowData[4]) > 10 && parseInt(rowData[4]) <= 20; }
                         },
                         {
-                            label: '6-10',
+                            label: '21-30',
                             order: 2,
-                            value: function (rowData) { return parseInt(rowData[4]) > 5 && parseInt(rowData[4]) <= 10; }
+                            value: function (rowData) { return parseInt(rowData[4]) > 20 && parseInt(rowData[4]) <= 30; }
                         },
                         {
-                            label: '11+',
-                            order: 3,
-                            value: function (rowData) { return parseInt(rowData[4]) > 10; }
+                            label: '30+',
+                            order: 2,
+                            value: function (rowData) { return parseInt(rowData[4]) > 30; }
                         }
                     ]
                 }
@@ -49,29 +51,29 @@ function caricaUtenti(data) {
                     orderable: false,
                     options: [
                         {
-                            label: '0',
+                            label: '0-10',
                             order: 0,
-                            value: function (rowData) { return parseInt(rowData[5]) === 0; }
+                            value: function (rowData) { return parseInt(rowData[5]) <= 10; }
                         },
                         {
-                            label: '1-5',
+                            label: '11-20',
                             order: 1,
-                            value: function (rowData) { return parseInt(rowData[5]) > 0 && parseInt(rowData[5]) <= 5; }
+                            value: function (rowData) { return parseInt(rowData[5]) > 10 && parseInt(rowData[5]) <= 20; }
                         },
                         {
-                            label: '6-10',
+                            label: '21-30',
                             order: 2,
-                            value: function (rowData) { return parseInt(rowData[5]) > 5 && parseInt(rowData[5]) <= 10; }
+                            value: function (rowData) { return parseInt(rowData[5]) > 20 && parseInt(rowData[5]) <= 30; }
                         },
                         {
-                            label: '11+',
+                            label: '30+',
                             order: 3,
-                            value: function (rowData) { return parseInt(rowData[5]) > 10; }
-                        }
+                            value: function (rowData) { return parseInt(rowData[5]) > 30; }
+                        },
                     ],
                 }
             },
-            { targets: [6], type: 'html', orderable: false, searchable: false, searchPanes: { show: false } },
+            { targets: 6, type: 'html', orderable: false, searchable: false, searchPanes: { show: false } },
         ],
         responsive: true,
         lengthMenu: [10, 25, 50],

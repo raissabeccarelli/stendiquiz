@@ -14,6 +14,7 @@ $(document).ready(function () {
     $('#btnInviaRisposte').on('click', function (event) {
         var quizCodice = getQuizCodice();
         $('.contenitore-loader .loader').removeClass('d-none');
+        $('#btnInviaRisposte').prop("disabled", true);
         inserisciPartecipazione(quizCodice, function (risultatoAjax) {
             if (risultatoAjax && "esito" in risultatoAjax) {
                 getCodicePartecipazione(function (risultatoAjax) {
@@ -24,7 +25,7 @@ $(document).ready(function () {
                             $("#alertSuccess").removeClass("d-none");
                             setTimeout(function () {
                                 window.location.href = "visualizzapartecipazione?codice=" + codicePartecipazione;
-                            }, 3000);
+                            }, 2000);
                         }
                     });
                 });
