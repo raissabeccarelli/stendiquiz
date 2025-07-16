@@ -7,8 +7,9 @@ set "TAB=%TAB:~0,1%"
 
 echo Stendiquiz
 echo.
-echo Verifica delle dipendenze in corso...
+
 REM Verifica installazione di Python
+echo Verifica installazione di Python in corso...
 python --version > nul 2>&1
 if errorlevel 1 (
     echo Non e' stata trovata un'installazione di Python sulla macchina
@@ -20,41 +21,24 @@ if errorlevel 1 (
     exit /b
 ) else (
     echo Trovata un'installazione di Python valida
+	echo.
 )
 
-REM Verifica installazione di Django
-python -c "import django" > nul 2>&1
-if errorlevel 1 (
-    echo Non e' stata trovata un'installazione di Django sulla macchina 
-    echo Installazione di Django in corso...
-    pip install django
-    if errorlevel 1 (
-        echo Errore durante l'installazione di Django
-        pause
-        exit /b
-    ) else (
-        echo Django e' stato installato correttamente!
-    )
-) else (
-    echo Trovato Django
+REM Controlla se l'ambiente virtuale "venv" esiste
+IF NOT EXIST vene (
+    echo Creazione dell'ambiente virtuale in corso...
+    python -m venv venv
 )
 
-REM Verifica se requests e' installato
-python -c "import requests" > nul 2>&1
-if errorlevel 1 (
-    echo Installazione del modulo Requests in corso...
-    pip install requests
-    if errorlevel 1 (
-        echo Errore durante l'installazione del modulo requests
-        pause
-        exit /b
-    ) else (
-        echo Requests e' stato installato correttamente!
-    )
-) else (
-    echo Trovato Requests
-)
+REM Attiva l'ambiente virtuale e installa le dipendenze
+echo Attivazione ambiente virtuale...
+call .\venv\Scripts\activate
+echo.
 
+echo Verifica e installazione delle dipendenze in corso (Django, Requests)...
+echo.
+pip install -r requirements.txt
+echo Dipendenze risolte correttamente
 echo.
 echo Avvio del server in corso...
 python manage.py runserver
