@@ -25,7 +25,7 @@ if errorlevel 1 (
 )
 
 REM Controlla se l'ambiente virtuale "venv" esiste
-IF NOT EXIST vene (
+IF NOT EXIST venv (
     echo Creazione dell'ambiente virtuale in corso...
     python -m venv venv
 )
